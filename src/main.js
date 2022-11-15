@@ -5,6 +5,8 @@ import store from "./store";
 
 Vue.config.productionTip = false;
 
+import "@/api/vueBootstrap.js";
+
 new Vue({
   router,
   store,
