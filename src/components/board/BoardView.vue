@@ -35,6 +35,32 @@
         >글삭제</b-button
       >
     </b-col>
+    <div class="mt-3">
+      <textarea style="width: 100%" v-model="comment"></textarea>
+      <vs-button @click="addComment"> 작성 </vs-button>
+    </div>
+    <div class="mt-3">
+      <b-alert show><h5>댓글 보기</h5></b-alert>
+    </div>
+    <div v-if="article.comments">
+      <b-col
+        class="commentBox"
+        v-for="(comment, index) in article.comments"
+        :key="comment.no">
+        <div
+          style="display: flex; jusitfy-content: center; align-items: center">
+          <vs-avatar id="userProfileIcon" primary>
+            <template #text>
+              {{ comment.memberId | firstName }}
+            </template>
+          </vs-avatar>
+          {{ comment.memberId }}
+        </div>
+        <p>시각: {{ comment.replyAt }}</p>
+        <div>{{ index + 1 }}. {{ comment.content }}</div>
+      </b-col>
+    </div>
+    <div v-else>댓글이 없습니다.</div>
   </b-container>
 </template>
 
@@ -47,6 +73,7 @@ export default {
   data() {
     return {
       article: {},
+      comment: "",
     };
   },
   computed: {
@@ -82,6 +109,15 @@ export default {
     moveList() {
       this.$router.push({ name: "boardlist" });
     },
+    addComment() {
+      let data = {
+        content: this.comment,
+      };
+      http.post(`/board/${this.article.no}/comment`, data).then(({ data }) => {
+        this.article.comments.push(data);
+        this.comment = "";
+      });
+    },
   },
   // filters: {
   //   dateFormat(regtime) {
@@ -91,4 +127,10 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.commentBox {
+  background-color: white;
+  border: 1px solid gray;
+  padding: 8px;
+}
+</style>

@@ -8,7 +8,7 @@
     </vs-avatar>
     {{ user.name }}
 
-    <vs-button block @click="logout"> 로그아웃 </vs-button>
+    <vs-button block @click="logout" size="small"> 로그아웃 </vs-button>
   </div>
   <div id="userProfileBox" v-else @click="active = !active">
     <vs-avatar id="userProfileIcon">
