@@ -48,9 +48,33 @@
         bottom: 1rem;
       ">
       <template icon>
-        <i id="addArticleBtn" class="bx bxs-plus-circle"></i>
+        <i
+          id="addArticleBtn"
+          class="bx bxs-plus-circle"
+          @click="active = !active"></i>
       </template>
     </div>
+    <vs-dialog scroll overflow-hidden prevent-close auto-width v-model="active">
+      <template #header>
+        <h3>Q&A 등록하기</h3>
+      </template>
+      <div class="con-content">
+        <div class="centerx labelx">
+          <div>
+            <label for="subject">제목 : </label>
+            <input id="subject" v-model="form.subject" />
+          </div>
+          <div>
+            <label for="content">제목 : </label>
+            <textarea id="content" v-model="form.content"></textarea>
+          </div>
+          <div>{{ form.errorMessage }}</div>
+        </div>
+      </div>
+      <template #footer>
+        <vs-button gradient @click="saveForm"> 저장 </vs-button>
+      </template>
+    </vs-dialog>
   </div>
 </template>
 
@@ -64,8 +88,13 @@ export default {
       search: "",
       page: 1,
       max: 6,
-
       article: [],
+      active: false,
+      form: {
+        subject: "",
+        content: "",
+        errorMessage: "",
+      },
     };
   },
 
@@ -80,6 +109,29 @@ export default {
         name: "boardview",
         params: { no: article.no },
       });
+    },
+    saveForm() {
+      this.form.errorMessage = "";
+      http
+        .post("/board", {
+          subject: this.subject,
+          content: this.content,
+        })
+        .then(({ data }) => {
+          if (data) {
+            this.closeModal();
+          }
+        })
+        .catch(({ response }) => {
+          this.form.errorMessage = response.data.errorMessage;
+        });
+    },
+    closeModal() {
+      this.form = {
+        subject: "",
+        content: "",
+      };
+      this.active = false;
     },
   },
 };
@@ -112,5 +164,8 @@ a {
 }
 #addArticleBtn:hover {
   color: #ff9f1c;
+}
+.labelx .vs-input {
+  margin: 10px;
 }
 </style>

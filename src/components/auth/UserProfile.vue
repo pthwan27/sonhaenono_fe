@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "UserProfile",
   data() {
@@ -62,8 +63,10 @@ export default {
       id: "",
       password: "",
       remember: this.$store.state.auth.remember,
-      user: this.$store.state.auth.user,
     };
+  },
+  computed: {
+    ...mapState("auth", ["user"]),
   },
   filters: {
     firstName: function (value) {
