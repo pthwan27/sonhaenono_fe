@@ -9,8 +9,15 @@
     <b-row class="mb-1">
       <b-col>
         <b-card
-          :header-html="`<h3>${article.no}.
-          ${article.subject} </h3><div><h6>${article.memberId}</div><div>${article.createdAt}</h6></div>`"
+          :header-html="`<h3>${article.no}.${article.subject} </h3>
+          <div>
+            <h6>${article.memberId}</h6>
+          </div>
+          <div>
+            <h6>
+            ${article.createdAt}
+            </h6>
+          </div>`"
           class="mb-2"
           border-variant="dark"
           no-body>
