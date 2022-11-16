@@ -37,11 +37,7 @@
     <template #tbody>
       <vs-tr
         :key="i"
-        v-for="(tr, i) in $vs.getPage(
-          $vs.getSearch(article, search),
-          page,
-          max,
-        )"
+        v-for="(tr, i) in $vs.getPage(article, page, max)"
         :data="tr">
         <vs-td>
           {{ tr.no }}
@@ -78,7 +74,7 @@ export default {
     return {
       search: "",
       page: 1,
-      max: 3,
+      max: 5,
 
       article: [],
     };
@@ -93,6 +89,19 @@ export default {
 </script>
 
 <style>
+a:link {
+  color: black;
+}
+a:visited {
+  color: black;
+}
+a:hover {
+  color: rgba(255, 185, 93, 0.699);
+}
+a {
+  text-decoration: none;
+}
+
 #th-no {
   width: 40px;
 }

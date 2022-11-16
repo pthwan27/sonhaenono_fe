@@ -41,7 +41,7 @@ const routes = [
       {
         path: "list",
         name: "boardlist",
-        component: () => import("@/components/board/BoardList"),
+        component: () => import("@/components/board/BoardList2"),
       },
       {
         path: "view/:articleno",

@@ -4,6 +4,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
+import "@/api/vueBootstrap.js";
 import "vuesax/dist/vuesax.css";
 import "boxicons/css/boxicons.min.css";
 import "boxicons";
