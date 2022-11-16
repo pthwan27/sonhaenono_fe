@@ -12,6 +12,7 @@
     "bootstrap-vue": "^2.23.1",
     "boxicons": "^2.1.4",
     "core-js": "^3.8.3",
+    "install": "^0.13.0",
     "vue-router": "^3.5.1",
     "vuesax": "^4.0.1-alpha.25",
     "vuex": "^3.6.2",
