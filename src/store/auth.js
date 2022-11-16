@@ -21,12 +21,13 @@ const auth = {
     },
   },
   actions: {
-    login({ commit }, payload = {}) {
+    login({ commit, dispatch }, payload = {}) {
       http
         .post("/auth/authenticate", payload)
         .then(({ data }) => {
           const token = data.token;
           commit("SET_TOKEN", "Bearer " + token);
+          dispatch("getInfo");
         })
         .catch((err) => {
           commit("ERROR_HANDLE", err);
@@ -40,6 +41,11 @@ const auth = {
         }, 1000);
       });
     },
+    getInfo({ commit }) {
+      http.get("/member/info").then(({ data }) => {
+        commit("SET_USER_INFO", data);
+      });
+    },
   },
   mutations: {
     SET_TOKEN(state, token) {
@@ -50,7 +56,11 @@ const auth = {
     DESTROY_TOKEN(state) {
       state.token.accessToken = "";
       state.isAuthenticated = false;
+      state.user = null;
       jwt.destroyToken();
+    },
+    SET_USER_INFO(state, user) {
+      state.user = user;
     },
     TOGGLE_REMEMBER(state) {
       state.remember = !state.remember;

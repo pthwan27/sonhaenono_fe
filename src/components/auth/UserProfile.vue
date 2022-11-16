@@ -1,13 +1,14 @@
 <template>
   <div id="userProfileBox" v-if="user">
-    <vs-avatar id="userProfileIcon">
-      <img :src="'/static/' + user.profile" alt="" />
+    <vs-avatar id="userProfileIcon" primary>
+      <!-- <img :src="'/static/' + user.profile" alt="" /> -->
+      <template #text>
+        {{ user.name | firstName }}
+      </template>
     </vs-avatar>
-    <!-- <vs-avatar badge-color="danger" badge-position="top-right">
-      <i class="bx bx-bell"></i>
+    {{ user.name }}
 
-      <template #badge> 28 </template>
-    </vs-avatar> -->
+    <vs-button block @click="logout"> 로그아웃 </vs-button>
   </div>
   <div id="userProfileBox" v-else @click="active = !active">
     <vs-avatar id="userProfileIcon">
@@ -55,7 +56,6 @@
 <script>
 export default {
   name: "UserProfile",
-  components: {},
   data() {
     return {
       active: false,
@@ -64,6 +64,11 @@ export default {
       remember: this.$store.state.auth.remember,
       user: this.$store.state.auth.user,
     };
+  },
+  filters: {
+    firstName: function (value) {
+      return value.charAt(0);
+    },
   },
   methods: {
     login() {
@@ -75,6 +80,9 @@ export default {
     },
     toggleRemember() {
       this.$store.commit("user/TOGGLE_REMEMBER");
+    },
+    logout() {
+      this.$store.dispatch("auth/logout");
     },
   },
 };
