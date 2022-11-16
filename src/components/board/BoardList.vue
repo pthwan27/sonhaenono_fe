@@ -42,6 +42,17 @@
       </vs-tr>
     </v-div>
     <vs-pagination v-model="page" :length="$vs.getLength(article, max)" />
+    <div
+      style="
+        display: inline-flex;
+        position: absolute;
+        right: 1rem;
+        bottom: 1rem;
+      ">
+      <template icon>
+        <i id="addArticleBtn" class="bx bxs-plus-circle"></i>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -86,5 +97,14 @@ a {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   margin-bottom: 15px;
+}
+
+#addArticleBtn {
+  color: #ffbf69;
+  font-size: 64px;
+  cursor: pointer;
+}
+#addArticleBtn:hover {
+  color: #ff9f1c;
 }
 </style>
