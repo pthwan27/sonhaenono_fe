@@ -10,6 +10,24 @@ const routes = [
     name: "main",
     component: AppMain,
   },
+  {
+    path: "/board",
+    name: "board",
+    component: () => import("@/views/AppBoard"),
+    redirect: "/board/list",
+    children: [
+      {
+        path: "list",
+        name: "boardlist",
+        component: () => import("@/components/board/BoardList"),
+      },
+      {
+        path: "view/:articleno",
+        name: "boardview",
+        component: () => import("@/components/board/BoardView"),
+      },
+    ],
+  },
 ];
 
 const router = new VueRouter({
