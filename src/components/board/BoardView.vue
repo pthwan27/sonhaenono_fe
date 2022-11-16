@@ -85,7 +85,7 @@ export default {
   },
   created() {
     console.log(`${this.$route.params}`);
-    http.get(`/board/${this.$route.params.articleno}`).then(({ data }) => {
+    http.get(`/board/${this.$route.params.no}`).then(({ data }) => {
       console.log(data);
       this.article = data;
     });
@@ -96,7 +96,7 @@ export default {
         name: "boardmodify",
         params: { no: this.article.no },
       });
-      //   this.$router.push({ path: `/board/modify/${this.article.articleno}` });
+      //   this.$router.push({ path: `/board/modify/${this.article.no}` });
     },
     deleteArticle() {
       if (confirm("정말로 삭제?")) {

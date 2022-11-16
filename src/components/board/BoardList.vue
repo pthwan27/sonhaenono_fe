@@ -3,27 +3,25 @@
     <v-div class="div-card">
       <vs-tr
         :key="i"
-        v-for="(item, i) in $vs.getPage(article, page, max)"
+        v-for="(article, i) in $vs.getPage(article, page, max)"
         :data="tr">
         <v-div>
           <vs-card>
             <template #title>
-              <router-link
-                :to="{ name: 'boardview', params: { articleno: item.no } }">
-                <h3 v-html="`${item.no}.${item.subject}`"></h3>
-              </router-link>
+              <h3
+                v-html="`${article.no}.${article.subject}`"
+                @click="viewArticle(article)"></h3>
             </template>
             <template #img>
-              <router-link
-                :to="{ name: 'boardview', params: { articleno: item.no } }">
-                <img src="@/assets/temp.png" alt="" />
-              </router-link>
+              <img
+                src="@/assets/temp.png"
+                alt=""
+                @click="viewArticle(article)" />
             </template>
             <template #text>
-              <router-link
-                :to="{ name: 'boardview', params: { articleno: item.no } }">
-                <p v-html="`${item.content}`"></p>
-              </router-link>
+              <p
+                v-html="`${article.content}`"
+                @click="viewArticle(article)"></p>
             </template>
             <template #interactions>
               <vs-button danger icon>
@@ -75,6 +73,14 @@ export default {
     http.get(`/board`).then(({ data }) => {
       this.article = data;
     });
+  },
+  methods: {
+    viewArticle(article) {
+      this.$router.push({
+        name: "boardview",
+        params: { no: article.no },
+      });
+    },
   },
 };
 </script>
