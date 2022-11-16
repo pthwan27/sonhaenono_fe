@@ -23,11 +23,6 @@ const routes = [
     component: NoticeView,
   },
   {
-    name: "qna",
-    path: "/qna",
-    component: QnaView,
-  },
-  {
     name: "map",
     path: "/map",
     component: MapView,
@@ -36,6 +31,24 @@ const routes = [
     name: "community",
     path: "/community",
     component: CommunityView,
+  },
+  {
+    path: "/qna",
+    name: "qna",
+    component: QnaView,
+    redirect: "/qna/list",
+    children: [
+      {
+        path: "list",
+        name: "boardlist",
+        component: () => import("@/components/board/BoardList"),
+      },
+      {
+        path: "view/:articleno",
+        name: "boardview",
+        component: () => import("@/components/board/BoardView"),
+      },
+    ],
   },
 ];
 

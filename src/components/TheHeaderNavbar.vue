@@ -2,12 +2,17 @@
   <div class="center examplex">
     <vs-navbar center-collapsed v-model="active">
       <template #left>
-        <vs-navbar-item :active="active == 'map'" id="map">
-          map
-        </vs-navbar-item>
-        <vs-navbar-item :active="active == 'board'" id="board">
-          board
-        </vs-navbar-item>
+        <router-link :to="{ name: 'main' }">
+          <vs-navbar-item :active="active == 'map'" id="map">
+            map
+          </vs-navbar-item>
+        </router-link>
+
+        <router-link :to="{ name: 'board' }">
+          <vs-navbar-item :active="active == 'board'" id="board">
+            board
+          </vs-navbar-item>
+        </router-link>
       </template>
     </vs-navbar>
   </div>
