@@ -41,12 +41,17 @@ const routes = [
       {
         path: "list",
         name: "boardlist",
-        component: () => import("@/components/board/BoardList2"),
+        component: () => import("@/components/board/BoardList"),
       },
       {
-        path: "view/:articleno",
+        path: "view/:no",
         name: "boardview",
         component: () => import("@/components/board/BoardView"),
+      },
+      {
+        path: "delete/:no",
+        name: "boarddelete",
+        component: () => import("@/components/board/BoardDelete"),
       },
     ],
   },

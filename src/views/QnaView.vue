@@ -10,4 +10,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+#router-view {
+  overflow-y: auto;
+}
+</style>

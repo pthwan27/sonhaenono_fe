@@ -1,5 +1,41 @@
 <template>
-  <div></div>
+  <b-container class="bv-example-row mt-3">
+    <b-row>
+      <b-col>
+        <b-alert show><h3>글보기</h3></b-alert>
+      </b-col>
+    </b-row>
+    <b-row class="mb-1"> </b-row>
+    <b-row class="mb-1">
+      <b-col>
+        <b-card
+          :header-html="`<h3>${article.no}.
+          ${article.subject} </h3><div><h6>${article.memberId}</div><div>${article.createdAt}</h6></div>`"
+          class="mb-2"
+          border-variant="dark"
+          no-body>
+          <b-card-body class="text-left">
+            <div v-html="message"></div>
+          </b-card-body>
+        </b-card>
+      </b-col>
+    </b-row>
+    <b-col class="text-left">
+      <b-button variant="outline-primary" @click="moveList">목록</b-button>
+    </b-col>
+    <b-col class="text-right">
+      <b-button
+        variant="outline-info"
+        size="sm"
+        @click="moveModifyArticle"
+        class="mr-2"
+        >글수정</b-button
+      >
+      <b-button variant="outline-danger" size="sm" @click="deleteArticle"
+        >글삭제</b-button
+      >
+    </b-col>
+  </b-container>
 </template>
 
 <script>
@@ -31,7 +67,7 @@ export default {
     moveModifyArticle() {
       this.$router.replace({
         name: "boardmodify",
-        params: { articleno: this.article.articleno },
+        params: { no: this.article.no },
       });
       //   this.$router.push({ path: `/board/modify/${this.article.articleno}` });
     },
@@ -39,7 +75,7 @@ export default {
       if (confirm("정말로 삭제?")) {
         this.$router.replace({
           name: "boarddelete",
-          params: { articleno: this.article.articleno },
+          params: { no: this.article.no },
         });
       }
     },
