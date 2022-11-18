@@ -28,6 +28,21 @@ const routes = [
     component: MapView,
   },
   {
+    name: "login",
+    path: "/login",
+    component: () => import("@/views/LoginView.vue"),
+  },
+  {
+    name: "signin",
+    path: "/signin",
+    component: () => import("@/views/SigninView.vue"),
+  },
+  {
+    name: "mypage",
+    path: "/mypage",
+    component: () => import("@/views/MyPageView.vue"),
+  },
+  {
     name: "community",
     path: "/community",
     component: CommunityView,
