@@ -17,9 +17,4 @@ export default {
 #router-view {
   overflow-y: auto;
 }
-
-header {
-  padding-top: 100px;
-  height: 200px;
-}
 </style>

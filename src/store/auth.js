@@ -19,6 +19,9 @@ const auth = {
     isAuthenticated: function (state) {
       return state.isAuthenticated;
     },
+    getError: function (state) {
+      return state.error;
+    },
   },
   actions: {
     login({ commit, dispatch }, payload = {}) {
@@ -66,7 +69,7 @@ const auth = {
       state.remember = !state.remember;
     },
     ERROR_HANDLE(state, error) {
-      state.err = error;
+      state.error = error.response.data;
     },
   },
 };

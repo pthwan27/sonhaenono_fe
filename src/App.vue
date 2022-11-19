@@ -2,7 +2,7 @@
   <div id="app">
     <vs-navbar center-collapsed v-if="!hideNavbar">
       <template #left>
-        <router-link to="/">
+        <router-link to="/" style="padding: 0.5rem 1rem">
           <img :src="logo" alt="" id="logoIcon" />
         </router-link>
       </template>
@@ -106,7 +106,10 @@ export default {
   padding: 0;
   box-sizing: border-box;
 }
-
+header {
+  padding-top: 64px;
+  height: 128px;
+}
 #logoIcon {
   width: 42px;
   height: 42px;

@@ -25,19 +25,22 @@
     <div class="box flexible">
       <b-card class="box-item">
         <div class="center content-inputs">
-          <vs-input label="아이디" v-model.lazy.trim="id" />
+          <vs-input label="아이디" v-model.lazy.trim="id" ref="id" />
         </div>
         <div class="center content-inputs">
           <vs-input
             label="비밀번호"
             v-model.lazy.trim="password"
+            ref="password"
             type="password" />
         </div>
         <div class="center" style="padding: 0">
           <vs-checkbox v-model="remember"> 아이디 기억하기 </vs-checkbox>
         </div>
         <div class="center content-inputs">
-          <vs-button style="width: 200px" @click="login"> 로그인 </vs-button>
+          <vs-button style="width: 200px" @click="login" :loading="loading">
+            로그인
+          </vs-button>
         </div>
         <div class="center content-inputs">
           <span>
@@ -61,13 +64,15 @@ export default {
       id: "",
       password: "",
       remember: false,
+      loading: false,
     };
   },
   computed: {
-    ...mapGetters("auth", ["isAuthenticated"]),
+    ...mapGetters("auth", ["isAuthenticated", "getError"]),
   },
   watch: {
     isAuthenticated: function (val) {
+      this.loading = false;
       if (val) {
         if (this.remember) {
           this.$cookies.set(REMEBMER_USER_ID_KEY, this.id);
@@ -77,13 +82,23 @@ export default {
         this.$router.push({ name: "map" });
       }
     },
+    getError: function ({ errorMessage } = {}) {
+      this.loading = false;
+      alert(errorMessage);
+    },
   },
   methods: {
     login() {
+      if (!this.id) {
+        alert("아이디를 입력해주세요.");
+        this.$ref.id.focus();
+        return;
+      }
       const loginInfo = {
         id: this.id,
         password: this.password,
       };
+      this.loading = true;
       this.$store.dispatch("auth/login", loginInfo);
     },
   },
