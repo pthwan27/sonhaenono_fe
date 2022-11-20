@@ -1,5 +1,10 @@
 <template>
-  <div>community</div>
+  <b-container>
+    <header>
+      <h3>커뮤니티</h3>
+    </header>
+    <router-view></router-view>
+  </b-container>
 </template>
 
 <script>

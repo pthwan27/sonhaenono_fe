@@ -43,15 +43,16 @@ const routes = [
     component: () => import("@/views/MyPageView.vue"),
   },
   {
-    name: "community",
-    path: "/community",
-    component: CommunityView,
-  },
-  {
     path: "/qna",
     name: "qna",
     component: QnaView,
     redirect: "/qna/list",
+  },
+  {
+    name: "community",
+    path: "/community",
+    component: CommunityView,
+    redirect: "/community/list",
     children: [
       {
         path: "list",

@@ -1,73 +1,78 @@
 <template>
-  <b-container class="bv-example-row mt-3">
-    <b-row>
-      <b-col>
-        <b-alert show><h3>글보기</h3></b-alert>
-      </b-col>
-    </b-row>
-    <b-row class="mb-1"> </b-row>
-    <b-row class="mb-1">
-      <b-col>
-        <b-card
-          :header-html="`<h3>${article.no}.${article.subject} </h3>
-          <div>
-            <h6>${article.memberId}</h6>
+  <b-container class="bv-example-row mb-5">
+    <b-card>
+      <b-row>
+        <b-col class="text-left">
+          <b-button variant="outline-primary" @click="moveList">목록</b-button>
+        </b-col>
+        <b-col class="text-right">
+          <b-button
+            variant="outline-info"
+            size="sm"
+            @click="moveModifyArticle"
+            class="mr-2"
+            >글수정</b-button
+          >
+          <b-button variant="outline-danger" size="sm" @click="deleteArticle"
+            >글삭제</b-button
+          >
+        </b-col>
+      </b-row>
+      <hr />
+
+      <b-card-title>
+        <h3>{{ `${article.no}. ${article.subject}` }}</h3>
+      </b-card-title>
+      <b-card-subTitle>
+        <b-row>
+          <b-col class="text-left">
+            <h6>{{ `${article.memberId}` }}</h6>
+          </b-col>
+          <b-col class="text-right">
+            <h6>{{ `${article.createdAt} ` }}</h6>
+          </b-col>
+        </b-row>
+      </b-card-subTitle>
+
+      <b-card-text class="text-left">
+        <p></p>
+        <div v-html="message"></div>
+      </b-card-text>
+    </b-card>
+    <hr class="mt-5 hr-div" />
+    <div class="mt-3">
+      <b-input-group class="mt-3">
+        <b-form-input
+          v-model="comment"
+          placeholder="댓글을 입력해주세요"></b-form-input>
+        <b-input-group-append>
+          <b-button variant="info" @click="addComment"> 등록</b-button>
+        </b-input-group-append>
+      </b-input-group>
+    </div>
+    <div class="mt-3">
+      <b-alert show><h8>댓글 5</h8></b-alert>
+
+      <b-div v-if="article.comments">
+        <b-div
+          class="commentBox mt-2"
+          v-for="(comment, index) in article.comments"
+          :key="comment.no">
+          <div
+            style="display: flex; jusitfy-content: center; align-items: center">
+            <vs-avatar circle id="userProfileIcon" primary>
+              <template #text>
+                {{ comment.memberId | firstName }}
+              </template>
+            </vs-avatar>
+            {{ comment.memberId }}
           </div>
-          <div>
-            <h6>
-            ${article.createdAt}
-            </h6>
-          </div>`"
-          class="mb-2"
-          border-variant="dark"
-          no-body>
-          <b-card-body class="text-left">
-            <div v-html="message"></div>
-          </b-card-body>
-        </b-card>
-      </b-col>
-    </b-row>
-    <b-col class="text-left">
-      <b-button variant="outline-primary" @click="moveList">목록</b-button>
-    </b-col>
-    <b-col class="text-right">
-      <b-button
-        variant="outline-info"
-        size="sm"
-        @click="moveModifyArticle"
-        class="mr-2"
-        >글수정</b-button
-      >
-      <b-button variant="outline-danger" size="sm" @click="deleteArticle"
-        >글삭제</b-button
-      >
-    </b-col>
-    <div class="mt-3">
-      <textarea style="width: 100%" v-model="comment"></textarea>
-      <vs-button @click="addComment"> 작성 </vs-button>
+          <p>시각: {{ comment.replyAt }}</p>
+          <div>{{ index + 1 }}. {{ comment.content }}</div>
+        </b-div>
+      </b-div>
+      <b-row v-else>댓글이 없습니다.</b-row>
     </div>
-    <div class="mt-3">
-      <b-alert show><h5>댓글 보기</h5></b-alert>
-    </div>
-    <div v-if="article.comments">
-      <b-col
-        class="commentBox"
-        v-for="(comment, index) in article.comments"
-        :key="comment.no">
-        <div
-          style="display: flex; jusitfy-content: center; align-items: center">
-          <vs-avatar id="userProfileIcon" primary>
-            <template #text>
-              {{ comment.memberId | firstName }}
-            </template>
-          </vs-avatar>
-          {{ comment.memberId }}
-        </div>
-        <p>시각: {{ comment.replyAt }}</p>
-        <div>{{ index + 1 }}. {{ comment.content }}</div>
-      </b-col>
-    </div>
-    <div v-else>댓글이 없습니다.</div>
   </b-container>
 </template>
 
@@ -90,6 +95,7 @@ export default {
       return "";
     },
   },
+
   created() {
     console.log(`${this.$route.params}`);
     http.get(`/board/${this.$route.params.no}`).then(({ data }) => {
@@ -97,6 +103,11 @@ export default {
       this.article = data;
     });
   },
+  // filters: {
+  //   dateFormat(createAt) {
+  //     return moment(new Date(createAt)).format("YY.MM.DD");
+  //   },
+  // },
   methods: {
     moveModifyArticle() {
       this.$router.replace({
@@ -117,6 +128,9 @@ export default {
       this.$router.push({ name: "boardlist" });
     },
     addComment() {
+      if (this.comment.length == 0) {
+        return false;
+      }
       let data = {
         content: this.comment,
       };
@@ -126,18 +140,19 @@ export default {
       });
     },
   },
-  // filters: {
-  //   dateFormat(regtime) {
-  //     return moment(new Date(regtime)).format("YY.MM.DD hh:mm:ss");
-  //   },
-  // },
 };
 </script>
 
 <style>
 .commentBox {
-  background-color: white;
-  border: 1px solid gray;
-  padding: 8px;
+  border-style: solid;
+}
+.alert-info {
+  padding: 10px;
+  background: none;
+  border: none;
+}
+.hr-div {
+  border-width: 2px;
 }
 </style>
