@@ -3,6 +3,9 @@
     <div class="box flexible">
       <div class="flexible" style="flex-direction: column">
         <div style="height: 50%; width: 100%">
+          <vs-button shadow @click="$router.push({ name: 'main' })">
+            메인으로 이동하기
+          </vs-button>
           <div style="font-size: 60px; font-weight: bold; text-align: center">
             안녕하세요 :) 손해노노 입니다.
           </div>
