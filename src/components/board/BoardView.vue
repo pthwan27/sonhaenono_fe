@@ -40,26 +40,16 @@
       </b-card-text>
     </b-card>
     <hr class="mt-5 hr-div" />
-    <div class="mt-3">
-      <b-input-group class="mt-3">
-        <b-form-input
-          v-model="comment"
-          placeholder="댓글을 입력해주세요"></b-form-input>
-        <b-input-group-append>
-          <b-button variant="info" @click="addComment"> 등록</b-button>
-        </b-input-group-append>
-      </b-input-group>
-    </div>
+
     <div class="mt-3">
       <b-alert show><h8>댓글 5</h8></b-alert>
 
-      <b-div v-if="article.comments">
-        <b-div
+      <div v-if="article.comments">
+        <div
           class="commentBox mt-2"
           v-for="(comment, index) in article.comments"
           :key="comment.no">
-          <div
-            style="display: flex; jusitfy-content: center; align-items: center">
+          <div style="jusitfy-content: center; align-items: center">
             <vs-avatar circle id="userProfileIcon" primary>
               <template #text>
                 {{ comment.memberId | firstName }}
@@ -69,9 +59,19 @@
           </div>
           <p>시각: {{ comment.replyAt }}</p>
           <div>{{ index + 1 }}. {{ comment.content }}</div>
-        </b-div>
-      </b-div>
+        </div>
+      </div>
       <b-row v-else>댓글이 없습니다.</b-row>
+    </div>
+    <div class="mt-3">
+      <b-input-group class="mt-3">
+        <b-form-input
+          v-model="comment"
+          placeholder="댓글을 입력해주세요"></b-form-input>
+        <b-input-group-append>
+          <b-button variant="info" @click="addComment"> 등록</b-button>
+        </b-input-group-append>
+      </b-input-group>
     </div>
   </b-container>
 </template>
@@ -145,7 +145,10 @@ export default {
 
 <style>
 .commentBox {
-  border-style: solid;
+  width: calc(100% - 3.2rem);
+  margin: 0 auto;
+  padding: 1.2rem 1.6rem 0.9rem;
+  box-shadow: 0 0 11.9px 2.9px rgb(0 0 0 / 10%);
 }
 .alert-info {
   padding: 10px;
