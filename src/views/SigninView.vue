@@ -208,8 +208,6 @@ export default {
       }
     },
     createUser() {
-      this.loading = true;
-
       const data = {
         id: this.id,
         password: this.password,
@@ -217,6 +215,16 @@ export default {
         phone: this.phone,
         email: this.email,
       };
+      if (
+        this.namehasError ||
+        this.passwordhasError ||
+        this.repasswordhasError ||
+        this.phonehasError ||
+        this.emailhasError
+      ) {
+        alert("입력하신 내용을 확인해주세요.");
+      }
+      this.loading = true;
       http
         .post("/auth/signup", data)
         .then((result) => {
