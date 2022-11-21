@@ -38,9 +38,7 @@
           <vs-checkbox v-model="remember"> 아이디 기억하기 </vs-checkbox>
         </div>
         <div class="center content-inputs">
-          <vs-button style="width: 200px" @click="login" :loading="loading">
-            로그인
-          </vs-button>
+          <vs-button @click="login" :loading="loading"> 로그인 </vs-button>
         </div>
         <div class="center content-inputs">
           <span>
