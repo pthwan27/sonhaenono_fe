@@ -6,6 +6,10 @@ export const ROLE_USER = "ROLE_USER";
 export const MAP_INITIAL_SPOT = [35.188, 126.829]; // 광주 광산구
 export const MAP_INITIAL_LEVEL = 3;
 
+export const BUILD_TYPE = {
+  APT: "APT",
+};
+
 export default {
   REMEBMER_USER_ID_KEY,
   KAKAO_MAP_API_KEY,

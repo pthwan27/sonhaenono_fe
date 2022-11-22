@@ -25,9 +25,12 @@ import {
   KAKAO_MAP_API_KEY,
   MAP_INITIAL_SPOT,
   MAP_INITIAL_LEVEL,
+  _BUILD_TYPE,
 } from "@/common/constant";
 import { getMapInfo } from "@/common/map";
 import { getMySpot } from "@/common/navigator";
+import APT_IMG from "@/assets/map/apartment.svg";
+
 window.getMySpot = getMySpot;
 
 let map = null;
@@ -69,9 +72,24 @@ export default {
         this.getMarkerList(value);
       },
     },
+    markers: function (newValue, oldValue) {
+      this.flushMarker(oldValue);
+      this.showMarker(newValue);
+    },
     positions: function (newValue) {
       this.flushMarker(this.markers);
-      this.createMarker(newValue);
+
+      let imageSrc = APT_IMG;
+      let imageSize = new kakao.maps.Size(48, 48);
+      let imageOption = { offset: new kakao.maps.Point(27, 69) };
+
+      let markerImage = new kakao.maps.MarkerImage(
+        imageSrc,
+        imageSize,
+        imageOption,
+      );
+
+      this.createMarker(newValue, markerImage);
     },
     me: function ({ lat, lng }) {
       var moveLatLon = new kakao.maps.LatLng(lat, lng);
@@ -81,9 +99,29 @@ export default {
   },
   methods: {
     ...mapActions("houseStore", ["getMarkerList"]),
+    openNotification({ message, color = "primary" }) {
+      this.$vs.notification({
+        flat: true,
+        position: "bottom-right",
+        text: message,
+        color,
+      });
+    },
     whereAmI: async function () {
-      let where = await getMySpot();
-      this.me = where;
+      try {
+        this.openNotification({
+          message: "내 위치를 가져오는 중...",
+          color: "primary",
+        });
+        let where = await getMySpot();
+        this.me = where;
+      } catch (err) {
+        this.openNotification({
+          message:
+            "위치를 가져오는 도중 문제가 발생했습니다.<br/>권한을 확인해주세요.",
+          color: "danger",
+        });
+      }
     },
     updateMapInfo: debounce(function () {
       this.mapDetail = getMapInfo(map);
@@ -112,84 +150,17 @@ export default {
       // 지도가 이동, 확대, 축소로 인해 중심좌표가 변경될 때
       kakao.maps.event.addListener(map, "bounds_changed", this.updateMapInfo);
     },
-
-    curPos() {
-      if (navigator.geolocation) {
-        // GeoLocation을 이용해서 접속 위치를 얻어옵니다
-        navigator.geolocation.getCurrentPosition(function (position) {
-          var lat = position.coords.latitude; // 위도
-          var lon = position.coords.longitude; // 경도
-
-          var locPosition = new kakao.maps.LatLng(lat, lon); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
-          var message = "<b-label>현재위치<b-label>"; // 인포윈도우에 표시될 내용입니다
-
-          var marker = new kakao.maps.Marker({
-            position: locPosition,
-            map: map,
-          });
-
-          var iwContent = message,
-            iwRemoveable = true;
-
-          var infowindow = new kakao.maps.InfoWindow({
-            content: iwContent,
-            removable: iwRemoveable,
-          });
-
-          infowindow.open(map, marker);
-          map.setCenter(locPosition);
-        });
-      } else {
-        // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
-        var locPosition = new kakao.maps.LatLng(33.450701, 126.570667),
-          message = "geolocation을 사용할수 없어요..";
-
-        var marker = new kakao.maps.Marker({
-          position: locPosition,
-          map: map,
-        });
-
-        var iwContent = message,
-          iwRemoveable = true;
-
-        var infowindow = new kakao.maps.InfoWindow({
-          content: iwContent,
-          removable: iwRemoveable,
-        });
-
-        infowindow.open(map, marker);
-        map.setCenter(locPosition);
-      }
-    },
-
-    displayMarker(markerPositions) {
-      if (positions.length > 0) {
-        this.markers = positions.map(
-          (position) =>
-            new kakao.maps.Marker({
-              map: map,
-              position,
-            }),
-        );
-
-        //다시 중앙으로 오게하는 ?? 것
-        const bounds = positions.reduce(
-          (bounds, latlng) => bounds.extend(latlng),
-          new kakao.maps.LatLngBounds(),
-        );
-
-        map.setBounds(bounds);
-      }
-    },
     flushMarker(markers = []) {
       markers.forEach((marker) => marker.setMap(null));
     },
-    createMarker(positions = []) {
+    showMarker(markers = []) {
+      markers.forEach((marker) => marker.setMap(map));
+    },
+    createMarker(positions = [], image) {
       this.markers = positions.map((ps) => {
         let marker = new kakao.maps.Marker({
-          map: map,
           position: ps.latlng,
-          title: ps.title,
+          ...image,
         });
         return marker;
       });
