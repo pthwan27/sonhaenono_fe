@@ -3,8 +3,10 @@
     <div class="box flexible">
       <div class="flexible" style="flex-direction: column">
         <div style="height: 50%; width: 100%">
+          <vs-button shadow @click="$router.push({ name: 'main' })">
+            메인으로 이동하기
+          </vs-button>
           <div
-            class="zI7 iyn Hsu"
             style="
               color: rgb(0, 107, 108);
               font-size: 60px;
@@ -34,11 +36,11 @@
             ref="password"
             type="password" />
         </div>
-        <div class="center" style="padding: 0">
+        <div class="center content-inputs pt-0 pb-0">
           <vs-checkbox v-model="remember"> 아이디 기억하기 </vs-checkbox>
         </div>
         <div class="center content-inputs">
-          <vs-button style="width: 200px" @click="login" :loading="loading">
+          <vs-button style="flex: 1" @click="login" :loading="loading">
             로그인
           </vs-button>
         </div>
@@ -84,7 +86,8 @@ export default {
     },
     getError: function ({ errorMessage } = {}) {
       this.loading = false;
-      alert(errorMessage);
+      console.debug(errorMessage);
+      alert("아이디와 비밀번호를 확인해주세요.");
     },
   },
   methods: {
@@ -112,38 +115,42 @@ export default {
 };
 </script>
 
-<style scoped>
-.item {
-  object-fit: cover;
-}
+<style>
 #loginContainer {
   display: flex;
   height: 100vh;
   background-color: #cbf3f0;
 }
-.box {
+#loginContainer .box {
   width: 100%;
   height: 100%;
 }
-.box-item {
+#loginContainer .box-item {
   overflow: hidden;
   border-radius: 2rem;
 
-  width: 400px;
-  height: 500px;
+  width: 450px;
+
+  height: auto;
   padding: 3rem 1rem;
 }
-.flexible {
+#loginContainer .flexible {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.center {
+#loginContainer .center {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1rem;
   flex-wrap: wrap;
+}
+
+#loginContainer .vs-input-parent,
+#loginContainer .vs-input-content,
+#loginContainer input {
+  flex: 1 !important;
 }
 </style>
