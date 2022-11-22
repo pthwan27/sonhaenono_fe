@@ -11,13 +11,13 @@
               color: rgb(0, 107, 108);
               font-size: 60px;
               font-weight: bold;
-              text-align: center;
+              text-align: left;
             ">
-            빠르게 집을 알아볼 수 있도록 도와드릴게요!
+            빠르게 집을 알아볼 수 <br />있도록 도와드릴게요!
           </div>
           <div style="max-width: 700px">
-            <div style="font-size: 24px; color: rgb(0, 107, 108)">
-              관심지역을 등록하시면 개인에 맞춘 집 추천 서비스를 제공하고
+            <div style="font-size: 24px; color: rgb(0, 107, 108)" innerHTML="">
+              관심지역을 등록하시면 <br />개인에 맞춘 집 추천 서비스를 제공하고
               있습니다.
             </div>
           </div>

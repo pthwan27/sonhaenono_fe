@@ -19,7 +19,7 @@ export function getMySpot(customOptions) {
     if (navigator?.geolocation) {
       navigator.geolocation.getCurrentPosition(success, error, options);
     } else {
-      reject(new Error("지원하지 않는 부라우저입니다."));
+      reject(new Error("지원하지 않는 브라우저입니다."));
     }
   });
 }
