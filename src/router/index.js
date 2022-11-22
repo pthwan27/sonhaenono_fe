@@ -8,6 +8,8 @@ import QnaView from "@/views/QnaView";
 import MapView from "@/views/MapView";
 import CommunityView from "@/views/CommunityView";
 
+import jwt from "@/common/jwt";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -41,6 +43,7 @@ const routes = [
     name: "mypage",
     path: "/mypage",
     component: () => import("@/views/MyPageView.vue"),
+    meta: { authRequired: true },
   },
   {
     path: "/qna",
@@ -82,6 +85,23 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
+});
+
+router.beforeEach(function (to, from, next) {
+  if (
+    to.matched.some(function (routeInfo) {
+      return routeInfo.meta.authRequired;
+    })
+  ) {
+    if (jwt.getToken()) {
+      next();
+    } else {
+      alert("로그인이 필요합니다.");
+      next("/login");
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;
