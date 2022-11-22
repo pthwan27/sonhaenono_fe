@@ -1,7 +1,10 @@
 <template>
   <b-container id="myPageContainer">
     <div>
-      <vs-button success @click="$router.push({ name: 'main' })">
+      <vs-button
+        style="float: right"
+        success
+        @click="$router.push({ name: 'main' })">
         메인으로 이동하기
       </vs-button>
       <h1>마이페이지</h1>
