@@ -6,8 +6,8 @@
           <vs-button shadow @click="$router.push({ name: 'main' })">
             메인으로 이동하기
           </vs-button>
-          <div style="font-size: 60px; font-weight: bold; text-align: center">
-            안녕하세요 :) 손해노노 입니다.
+          <div style="font-size: 60px; font-weight: bold; text-align: left">
+            안녕하세요 :) <br />손해노노 입니다.
           </div>
           <div style="max-width: 700px">
             <div style="font-size: 24px">
@@ -258,11 +258,10 @@ export default {
 #signinContainer .box-item {
   overflow: hidden;
   border-radius: 2rem;
+  width: 450px;
 
   height: auto;
   padding: 3rem 1rem;
-
-  width: 450px;
 }
 #signinContainer .flexible {
   display: flex;
