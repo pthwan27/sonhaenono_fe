@@ -86,7 +86,8 @@ export default {
     },
     getError: function ({ errorMessage } = {}) {
       this.loading = false;
-      alert(errorMessage);
+      console.debug(errorMessage);
+      alert("아이디와 비밀번호를 확인해주세요.");
     },
   },
   methods: {
