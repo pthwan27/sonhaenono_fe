@@ -23,4 +23,15 @@ http.interceptors.request.use(
   },
 );
 
+function apiInstance() {
+  const instance = axios.create({
+    baseURL: "http://localhost/api",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+  });
+  return instance;
+}
+export { apiInstance };
+
 export default http;

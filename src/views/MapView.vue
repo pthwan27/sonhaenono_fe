@@ -4,7 +4,8 @@
       좌표찍어보기
     </b-button>
 
-    <b-button id="btn-cur" @click="currentPos()"> 현재좌표 </b-button>
+    <b-button id="btn-cur" @click="temp()"> 현재좌표 </b-button>
+
     <div id="map"></div>
   </div>
 </template>
@@ -12,7 +13,12 @@
 <script>
 import { debounce } from "lodash";
 import { KAKAO_MAP_API_KEY } from "@/common/constant";
+import { mapState } from "vuex";
+import { mapActions } from "vuex";
+
 let map = null;
+const houseStore = "houseStore";
+
 export default {
   name: "MapView",
 
@@ -31,11 +37,17 @@ export default {
       lng: 0,
 
       //남서쪽 북동쪽
-      swLatlng: 0,
-      neLatlng: 0,
+      swLat: 0,
+      swLng: 0,
+      neLat: 0,
+      neLng: 0,
     };
   },
   methods: {
+    ...mapActions("houseStore", ["getMarkerList"]),
+    temp() {
+      this.getMarkerList(this.swLat, this.swLng, this.neLat, this.neLng);
+    },
     initMap() {
       var mapContainer = document.getElementById("map"),
         mapOption = {
@@ -63,10 +75,21 @@ export default {
           var bounds = map.getBounds();
 
           // 영역정보의 남서쪽 정보
-          this.swLatlng = bounds.getSouthWest();
-
+          var swLatlng = bounds.getSouthWest();
           // 영역정보의 북동쪽 정보
-          this.neLatlng = bounds.getNorthEast();
+          var neLatlng = bounds.getSouthWest();
+
+          this.swLat = swLatlng.getLat();
+          this.swLng = swLatlng.getLng();
+          this.neLat = neLatlng.getLat();
+          this.neLng = neLatlng.getLng();
+
+          houseStore.dispatch("getMarkerList", {
+            southWestLat: this.swLat,
+            southWestlng: this.swLng,
+            norSthEastLat: this.neLat,
+            northEastlng: this.neLng,
+          });
         }, 200),
       );
 
@@ -167,6 +190,9 @@ export default {
 
       document.head.appendChild(script);
     }
+  },
+  computed: {
+    ...mapState(houseStore, ["markerPositions"]),
   },
 };
 </script>

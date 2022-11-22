@@ -17,11 +17,7 @@ const routes = [
     component: AppMain,
     redirect: "/map",
   },
-  {
-    name: "notice",
-    path: "/notice",
-    component: NoticeView,
-  },
+
   {
     name: "map",
     path: "/map",
@@ -47,12 +43,62 @@ const routes = [
     name: "qna",
     component: QnaView,
     redirect: "/qna/list",
+    children: [
+      {
+        path: "list",
+        name: "boardlist",
+        component: () => import("@/components/board/BoardList"),
+      },
+      {
+        path: "view/:no",
+        name: "boardview",
+        component: () => import("@/components/board/BoardView"),
+      },
+      {
+        path: "delete/:no",
+        name: "boarddelete",
+        component: () => import("@/components/board/BoardDelete"),
+      },
+      {
+        path: "modify",
+        name: "boardmodify",
+        component: () => import("@/components/board/BoardModify"),
+      },
+    ],
   },
   {
     name: "community",
     path: "/community",
     component: CommunityView,
     redirect: "/community/list",
+    children: [
+      {
+        path: "list",
+        name: "boardlist",
+        component: () => import("@/components/board/BoardList"),
+      },
+      {
+        path: "view/:no",
+        name: "boardview",
+        component: () => import("@/components/board/BoardView"),
+      },
+      {
+        path: "delete/:no",
+        name: "boarddelete",
+        component: () => import("@/components/board/BoardDelete"),
+      },
+      {
+        path: "modify",
+        name: "boardmodify",
+        component: () => import("@/components/board/BoardModify"),
+      },
+    ],
+  },
+  {
+    name: "notice",
+    path: "/notice",
+    component: NoticeView,
+    redirect: "/notice/list",
     children: [
       {
         path: "list",

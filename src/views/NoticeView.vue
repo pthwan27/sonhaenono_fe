@@ -1,5 +1,10 @@
 <template>
-  <div>공지사항</div>
+  <b-container>
+    <header>
+      <h1>공지사항</h1>
+    </header>
+    <router-view></router-view>
+  </b-container>
 </template>
 
 <script>
@@ -8,4 +13,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+#router-view {
+  overflow-y: auto;
+}
+</style>
