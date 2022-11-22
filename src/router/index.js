@@ -6,7 +6,6 @@ import AppMain from "@/views/AppMain.vue";
 import NoticeView from "@/views/NoticeView";
 import QnaView from "@/views/QnaView";
 import MapView from "@/views/MapView";
-import CommunityView from "@/views/CommunityView";
 
 import jwt from "@/common/jwt";
 
@@ -46,34 +45,6 @@ const routes = [
     name: "qna",
     component: QnaView,
     redirect: "/qna/list",
-    children: [
-      {
-        path: "list",
-        name: "boardlist",
-        component: () => import("@/components/board/BoardList"),
-      },
-      {
-        path: "view/:no",
-        name: "boardview",
-        component: () => import("@/components/board/BoardView"),
-      },
-      {
-        path: "delete/:no",
-        name: "boarddelete",
-        component: () => import("@/components/board/BoardDelete"),
-      },
-      {
-        path: "modify",
-        name: "boardmodify",
-        component: () => import("@/components/board/BoardModify"),
-      },
-    ],
-  },
-  {
-    name: "community",
-    path: "/community",
-    component: CommunityView,
-    redirect: "/community/list",
     children: [
       {
         path: "list",

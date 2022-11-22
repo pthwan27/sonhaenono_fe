@@ -52,7 +52,6 @@ import logo from "@/assets/logo.png";
 import { mapState } from "vuex";
 const navBarPageList = [
   { name: "아파트 거래", link: "map" },
-  { name: "커뮤니티", link: "community" },
   { name: "공지사항", link: "notice" },
   { name: "Q&A", link: "qna" },
 ];
