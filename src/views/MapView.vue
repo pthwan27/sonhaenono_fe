@@ -29,7 +29,9 @@ import {
 } from "@/common/constant";
 import { getMapInfo } from "@/common/map";
 import { getMySpot } from "@/common/navigator";
+
 import APT_IMG from "@/assets/map/apartment.svg";
+import APT_MY_HOUSE from "@/assets/map/house.svg";
 
 window.getMySpot = getMySpot;
 
@@ -78,22 +80,13 @@ export default {
       this.showMarker(newValue);
     },
     positions: function (newValue) {
-      let imageSrc = APT_IMG;
-      let imageSize = new kakao.maps.Size(48, 48);
-      let imageOption = { offset: new kakao.maps.Point(27, 69) };
-
-      let markerImage = new kakao.maps.MarkerImage(
-        imageSrc,
-        imageSize,
-        imageOption,
-      );
-
-      this.createMarker(newValue, markerImage);
+      this.createMarker(newValue);
     },
-    me: function ({ lat, lng }) {
-      var moveLatLon = new kakao.maps.LatLng(lat, lng);
-      // 지도 중심을 이동 시킵니다
-      map.setCenter(moveLatLon);
+    me: function (newValue) {
+      if (!newValue) {
+        return;
+      }
+      this.gotoMySpot(newValue);
     },
   },
   methods: {
@@ -121,6 +114,25 @@ export default {
           color: "danger",
         });
       }
+    },
+    gotoMySpot({ lat, lng }) {
+      let latLng = new kakao.maps.LatLng(lat, lng);
+      // 지도 중심을 이동 시킵니다
+      map.setCenter(latLng);
+
+      let imageSrc = APT_MY_HOUSE, // 마커이미지의 주소입니다
+        imageSize = new kakao.maps.Size(40, 40), // 마커이미지의 크기입니다
+        imageOption = { offset: new kakao.maps.Point(20, 20) };
+      let markerImage = new kakao.maps.MarkerImage(
+        imageSrc,
+        imageSize,
+        imageOption,
+      );
+      let marker = new kakao.maps.Marker({
+        position: latLng,
+        image: markerImage, // 마커이미지 설정
+      });
+      this.showMarker([marker]);
     },
     updateMapInfo: debounce(function () {
       this.mapDetail = getMapInfo(map);
@@ -160,11 +172,22 @@ export default {
       kakao.maps.event.addListener(marker, "click", event);
     },
     createMarker(positions = [], image) {
+      let imageSrc = APT_IMG;
+      let imageSize = new kakao.maps.Size(40, 40);
+      let imageOption = { offset: new kakao.maps.Point(20, 40) };
+
+      let markerImage = new kakao.maps.MarkerImage(
+        imageSrc,
+        imageSize,
+        imageOption,
+      );
+
       this.markers = positions.map((ps) => {
         let marker = new kakao.maps.Marker({
           position: ps.latlng,
-          ...image,
+          image: markerImage,
         });
+
         this.createMarkerClickEvent(marker, this.clickEventAPT(ps));
         return marker;
       });
