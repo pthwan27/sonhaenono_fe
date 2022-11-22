@@ -99,21 +99,22 @@ export default {
   },
 
   created() {
-    http.get(`/board`).then(({ data }) => {
+    http.get(`/qna`).then(({ data }) => {
       this.article = data;
     });
   },
   methods: {
     viewArticle(article) {
       this.$router.push({
-        name: "boardview",
+        path: `/qna`,
+        name: "qnaView",
         params: { no: article.no },
       });
     },
     saveForm() {
       this.form.errorMessage = "";
       http
-        .post("/board", {
+        .post("/qna", {
           subject: this.subject,
           content: this.content,
         })

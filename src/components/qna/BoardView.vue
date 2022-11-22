@@ -98,7 +98,7 @@ export default {
 
   created() {
     console.log(`${this.$route.params}`);
-    http.get(`/board/${this.$route.params.no}`).then(({ data }) => {
+    http.get(`/qna/${this.$route.params.no}`).then(({ data }) => {
       console.log(data);
       this.article = data;
     });
@@ -111,7 +111,7 @@ export default {
   methods: {
     moveModifyArticle() {
       this.$router.replace({
-        name: "boardmodify",
+        name: "qnamodify",
         params: { no: this.article.no },
       });
       //   this.$router.push({ path: `/board/modify/${this.article.no}` });
@@ -119,13 +119,13 @@ export default {
     deleteArticle() {
       if (confirm("정말로 삭제?")) {
         this.$router.replace({
-          name: "boarddelete",
+          name: "qnadelete",
           params: { no: this.article.no },
         });
       }
     },
     moveList() {
-      this.$router.push({ name: "boardlist" });
+      this.$router.push({ name: "qnalist" });
     },
     addComment() {
       if (this.comment.length == 0) {
@@ -134,7 +134,7 @@ export default {
       let data = {
         content: this.comment,
       };
-      http.post(`/board/${this.article.no}/comment`, data).then(({ data }) => {
+      http.post(`/qna/${this.article.no}/comment`, data).then(({ data }) => {
         this.article.comments.push(data);
         this.comment = "";
       });

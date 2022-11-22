@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import BoardInputItem from "@/components/board/item/BoardInputItem";
+import BoardInputItem from "@/components/qna/item/BoardInputItem";
 export default {
   name: "BoardModify",
   components: {

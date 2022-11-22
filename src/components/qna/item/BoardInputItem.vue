@@ -77,7 +77,7 @@ export default {
   created() {
     if (this.type === "modify") {
       http
-        .get(`/board/${this.$route.params.no}`)
+        .get(`/qna/${this.$route.params.no}`)
 
         .then(({ data }) => {
           // this.article.no = data.article.no;
@@ -123,7 +123,7 @@ export default {
     },
     registArticle() {
       http
-        .post(`/board`, {
+        .post(`/qna`, {
           memberId: this.article.memberId,
           subject: this.article.subject,
           content: this.article.content,
@@ -140,7 +140,7 @@ export default {
     modifyArticle() {
       console.log(this.article);
       http
-        .put(`/board/${this.article.no}`, {
+        .put(`/qna/${this.article.no}`, {
           subject: this.article.subject,
           content: this.article.content,
         })
@@ -152,10 +152,11 @@ export default {
           alert(msg);
           // 현재 route를 /list로 변경.
           this.moveList();
-        });
+        })
+        .catch();
     },
     moveList() {
-      this.$router.push({ name: "boardlist" });
+      this.$router.push({ name: "qnalist" });
     },
   },
 };

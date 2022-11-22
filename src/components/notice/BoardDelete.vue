@@ -22,7 +22,7 @@ export default {
     setTimeout(() => {
       loading.close();
     }, 2000);
-    http.delete(`/board/${this.$route.params.no}`).then(({ data }) => {
+    http.delete(`/notice/${this.$route.params.no}`).then(({ data }) => {
       let msg = "삭제 처리시 문제가 발생했습니다.";
       if (data === true) {
         msg = "삭제가 완료되었습니다.";

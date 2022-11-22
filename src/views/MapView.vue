@@ -165,7 +165,7 @@ export default {
       markers.forEach((marker) => marker.setMap(null));
     },
     showMarker(markers = []) {
-      if (this.mapDetail.level >= 6) {
+      if (this.mapDetail.level >= 5) {
         if (clusterer) {
           clusterer.clear();
         }
