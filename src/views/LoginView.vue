@@ -46,7 +46,8 @@
         </div>
         <div class="center content-inputs">
           <span>
-            회원가입은 <router-link to="/singin">여기</router-link>에서
+            회원가입은
+            <router-link to="/signin" style="color: blue">여기</router-link>에서
             가능합니다 :)</span
           >
         </div>

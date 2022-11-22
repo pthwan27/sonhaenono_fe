@@ -6,32 +6,38 @@
       </vs-button>
       <h1>마이페이지</h1>
     </div>
-    <vs-row w="12">
+    <vs-row :w="12">
       <vs-col>
         <vs-card>
           <template #title>
             <h3>내정보 수정하기</h3>
           </template>
           <template #text>
-            <v-form @submit.prevent="updateUserInfo">
-              <b-row>
-                <b-col cols="3"> 이름 </b-col>
-                <b-col cols="3"> {{ user.name }} </b-col>
-                <b-col cols="3"> 전화번호 </b-col>
-                <b-col cols="3"> {{ user.phone }} </b-col>
-                <b-col cols="3"> 이메일 </b-col>
-                <b-col cols="3"> {{ user.email }} </b-col>
-              </b-row>
-              <b-row>
-                <vs-button flat type="submit">변경</vs-button>
-              </b-row>
-            </v-form>
+            <vs-row id="myinfo">
+              <b-col cols="3"> 이름 </b-col>
+              <b-col cols="3">
+                <vs-input v-model="myinfo.name"></vs-input>
+              </b-col>
+              <b-col cols="3"> 전화번호 </b-col>
+              <b-col cols="3">
+                <vs-input v-model="myinfo.phone"></vs-input>
+              </b-col>
+              <b-col cols="3"> 이메일 </b-col>
+              <b-col cols="3">
+                <vs-input v-model="myinfo.email"></vs-input>
+              </b-col>
+            </vs-row>
+            <vs-row>
+              <vs-button flat @click="updateUserInfo" type="submit"
+                >변경</vs-button
+              >
+            </vs-row>
           </template>
         </vs-card>
       </vs-col>
     </vs-row>
-    <vs-row w="12" style="justify-content: space-between">
-      <vs-col w="6">
+    <vs-row :w="12" style="justify-content: space-between">
+      <vs-col :w="6">
         <vs-card>
           <template #title>
             <h3>관심지역 설정</h3>
@@ -56,7 +62,7 @@
         </vs-card></vs-col
       >
       <!-- 비밀번호 변경하기 -->
-      <vs-col w="5">
+      <vs-col :w="5">
         <vs-card>
           <template #title>
             <h3>비밀번호 변경하기</h3>
@@ -105,7 +111,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 import http from "@/api/http";
 import validation from "@/common/validation";
@@ -164,6 +170,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions("auth", ["logout"]),
     afterOldCheck(message) {
       if (message) {
         this.password.oldhasError = message;
@@ -207,7 +214,8 @@ export default {
           .then(({ data }) => {
             if (data) {
               alert("비밀번호가 변경됐습니다. 다시 로그인 해주세요.");
-              this.$store.dispatch("auth/logout");
+              this.logout();
+              location.href = "/login";
             }
           })
           .catch(({ response }) => {
@@ -218,10 +226,30 @@ export default {
       }
     },
     updateUserInfo() {
-      console.log("updateUserInfo");
+      let info = {
+        name: this.myinfo.name,
+        email: this.myinfo.email,
+        phone: this.myinfo.phone,
+      };
+      http
+        .put("/member/info", info)
+        .then(({ data }) => {
+          if (data) {
+            this.$store.dispatch("auth/getInfo");
+            alert("유저정보를 변경했습니다.");
+          }
+        })
+        .catch((err) => {
+          console.debug(err.response);
+          alert("유저정보 변경에 실패했습니다.");
+        });
     },
   },
   created() {
+    this.myinfo.email = this.user.email;
+    this.myinfo.phone = this.user.phone;
+    this.myinfo.name = this.user.name;
+
     http.get("/dongcode?type=sido").then(({ data }) => {
       this.favoritearea = data;
     });
@@ -253,5 +281,8 @@ body {
 }
 #myPageContainer .vs-card-content {
   margin-bottom: 1rem;
+}
+#myPageContainer #myinfo > .col-3 {
+  margin-bottom: 0.5rem;
 }
 </style>
