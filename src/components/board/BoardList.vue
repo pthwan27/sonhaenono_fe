@@ -1,12 +1,12 @@
 <template>
   <div>
-    <v-div class="div-card">
+    <div class="div-card">
       <vs-tr
         :key="i"
         v-for="(article, i) in $vs.getPage(article, page, max)"
         :data="tr">
-        <v-div>
-          <vs-card>
+        <div>
+          <vs-card type="2">
             <template #title>
               <h3
                 v-html="`${article.no}.${article.subject}`"
@@ -36,9 +36,9 @@
               </vs-button> -->
             </template>
           </vs-card>
-        </v-div>
+        </div>
       </vs-tr>
-    </v-div>
+    </div>
     <vs-pagination v-model="page" :length="$vs.getLength(article, max)" />
     <div
       style="
