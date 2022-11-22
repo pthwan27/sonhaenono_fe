@@ -1,6 +1,8 @@
 import http from "@/api/http";
 import jwt from "@/common/jwt";
 
+import { ROLE_ADMIN } from "@/common/constant";
+
 const auth = {
   namespaced: true,
   state: {
@@ -21,6 +23,9 @@ const auth = {
     },
     getError: function (state) {
       return state.error;
+    },
+    isAdmin: function (state) {
+      return state.user?.type === ROLE_ADMIN;
     },
   },
   actions: {
@@ -47,6 +52,7 @@ const auth = {
     getInfo({ commit }) {
       http.get("/member/info").then(({ data }) => {
         commit("SET_USER_INFO", data);
+        commit("ERROR_HANDLE", null);
       });
     },
   },
