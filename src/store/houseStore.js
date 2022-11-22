@@ -6,13 +6,13 @@ const houseStore = {
   namespaced: true,
 
   state: {
-    markerPositions: [],
+    aptList: [],
     marker: null,
   },
   getters: {},
   mutations: {
-    SET_MARKER_LIST(state, markerPositions) {
-      state.markerPositions = markerPositions;
+    SET_MARKER_LIST(state, aptList) {
+      state.aptList = aptList;
     },
   },
   actions: {

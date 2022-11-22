@@ -15,6 +15,7 @@ module.exports = {
     parser: "@babel/eslint-parser",
   },
   rules: {
+    "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
     "prettier/prettier": [
       "error",
       {

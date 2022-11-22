@@ -1,15 +1,17 @@
 <template>
-  <div>
-    <b-button id="btn-displayMarker" @click="displayMarker(markerPositions1)">
+  <b-container fluid class="m-0 p-0 d-flex">
+    <!-- <b-button id="btn-displayMarker" @click="displayMarker(markerPositions1)">
       좌표찍어보기
     </b-button>
 
     <b-button id="btn-cur" @click="curPos()"> 현재좌표 </b-button>
     <div>
       {{ markerPositions1 }}
-    </div>
+    </div> -->
+
+    <div id="sidebar"></div>
     <div id="map"></div>
-  </div>
+  </b-container>
 </template>
 
 <script>
@@ -33,7 +35,7 @@ export default {
         [37.564343, 126.937611],
       ],
       markers: [],
-
+      positions: [],
       // 지도 위치 움직일 때 값이 저장되도록 하기 위해
       level: 0,
       lat: 0,
@@ -150,15 +152,6 @@ export default {
     },
 
     displayMarker(markerPositions) {
-      if (this.markers.length > 0) {
-        this.markers.forEach((marker) => marker.setMap(null));
-      }
-
-      const positions = markerPositions.map(
-        (position) => new kakao.maps.LatLng(...position),
-      );
-      console.log(positions);
-
       if (positions.length > 0) {
         this.markers = positions.map(
           (position) =>
@@ -177,8 +170,36 @@ export default {
         map.setBounds(bounds);
       }
     },
+    flushMarker(markers = []) {
+      markers.forEach((marker) => marker.setMap(null));
+    },
+    createMarker(positions = []) {
+      this.markers = positions.map((ps) => {
+        let marker = new kakao.maps.Marker({
+          map: map,
+          position: ps.latlng,
+          title: ps.title,
+        });
+        return marker;
+      });
+    },
   },
 
+  computed: {
+    ...mapState(houseStore, ["aptList"]),
+  },
+  watch: {
+    aptList: function (newValue) {
+      this.positions = newValue.map((val) => ({
+        title: val.apartmentName,
+        latlng: new kakao.maps.LatLng(parseFloat(val.lat), parseFloat(val.lng)),
+      }));
+    },
+    positions: function (newValue) {
+      this.flushMarker(this.markers);
+      this.createMarker(newValue);
+    },
+  },
   mounted() {
     if (window.kakao && window.kakao.maps) {
       this.initMap();
@@ -192,17 +213,15 @@ export default {
       document.head.appendChild(script);
     }
   },
-  computed: {
-    ...mapState(houseStore, ["markerPositions"]),
-
-    changeMarker() {
-      return this.$store.state.markerPositions;
-    },
-  },
 };
 </script>
 
 <style scoped>
+#sidebar {
+  max-width: 375px;
+  width: 100%;
+  height: 100vh;
+}
 #map {
   width: 100%;
   height: 100vh;
