@@ -33,6 +33,7 @@ import APT_IMG from "@/assets/map/apartment.svg";
 import APT_MY_HOUSE from "@/assets/map/house.svg";
 
 let map = null;
+let clusterer = null;
 
 export default {
   name: "MapView",
@@ -164,6 +165,19 @@ export default {
       markers.forEach((marker) => marker.setMap(null));
     },
     showMarker(markers = []) {
+      if (this.mapDetail.level >= 6) {
+        if (clusterer) {
+          clusterer.clear();
+        }
+        clusterer = new kakao.maps.MarkerClusterer({
+          map,
+          averageCenter: true,
+          minLevel: this.mapDetail.level,
+        });
+
+        clusterer.addMarkers(markers);
+        return;
+      }
       markers.forEach((marker) => marker.setMap(map));
     },
     createMarkerClickEvent(marker, event) {
@@ -204,7 +218,7 @@ export default {
       /* global kakao */
       script.onload = () => kakao.maps.load(this.initMap);
 
-      script.src = `http://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${KAKAO_MAP_API_KEY}`;
+      script.src = `http://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${KAKAO_MAP_API_KEY}&libraries=clusterer`;
 
       document.head.appendChild(script);
     }
