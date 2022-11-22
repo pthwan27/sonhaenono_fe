@@ -63,6 +63,7 @@ export default {
     aptList: function (newValue) {
       this.positions = newValue.map((val) => ({
         title: val.apartmentName,
+        pnu: val.pnu,
         latlng: new kakao.maps.LatLng(parseFloat(val.lat), parseFloat(val.lng)),
       }));
     },
@@ -77,8 +78,6 @@ export default {
       this.showMarker(newValue);
     },
     positions: function (newValue) {
-      this.flushMarker(this.markers);
-
       let imageSrc = APT_IMG;
       let imageSize = new kakao.maps.Size(48, 48);
       let imageOption = { offset: new kakao.maps.Point(27, 69) };
@@ -147,6 +146,7 @@ export default {
       var zoomControl = new kakao.maps.ZoomControl();
       map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
+      this.updateMapInfo();
       // 지도가 이동, 확대, 축소로 인해 중심좌표가 변경될 때
       kakao.maps.event.addListener(map, "bounds_changed", this.updateMapInfo);
     },
@@ -156,14 +156,23 @@ export default {
     showMarker(markers = []) {
       markers.forEach((marker) => marker.setMap(map));
     },
+    createMarkerClickEvent(marker, event) {
+      kakao.maps.event.addListener(marker, "click", event);
+    },
     createMarker(positions = [], image) {
       this.markers = positions.map((ps) => {
         let marker = new kakao.maps.Marker({
           position: ps.latlng,
           ...image,
         });
+        this.createMarkerClickEvent(marker, this.clickEventAPT(ps));
         return marker;
       });
+    },
+    clickEventAPT(apt) {
+      return () => {
+        console.log("CLICK APT PNU=", apt.pnu);
+      };
     },
   },
   mounted() {
