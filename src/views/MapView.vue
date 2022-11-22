@@ -1,61 +1,101 @@
 <template>
   <b-container fluid class="m-0 p-0 d-flex">
-    <!-- <b-button id="btn-displayMarker" @click="displayMarker(markerPositions1)">
-      좌표찍어보기
-    </b-button>
-
-    <b-button id="btn-cur" @click="curPos()"> 현재좌표 </b-button>
-    <div>
-      {{ markerPositions1 }}
-    </div> -->
-
     <div id="sidebar"></div>
-    <div id="map"></div>
+    <div id="map-wrapper">
+      <div
+        id="map-left_box"
+        style="position: absolute; z-index: 1001; top: 10px; left: 10px">
+        <b-button
+          v-b-tooltip.hover.right="'내위치'"
+          variant="light"
+          @click="whereAmI"
+          ><i class="bx bx-current-location"></i>
+        </b-button>
+      </div>
+      <div id="map"></div>
+    </div>
   </b-container>
 </template>
 
 <script>
 import { debounce } from "lodash";
-import { KAKAO_MAP_API_KEY } from "@/common/constant";
 import { mapState } from "vuex";
 import { mapActions } from "vuex";
+import {
+  KAKAO_MAP_API_KEY,
+  MAP_INITIAL_SPOT,
+  MAP_INITIAL_LEVEL,
+} from "@/common/constant";
+import { getMapInfo } from "@/common/map";
+import { getMySpot } from "@/common/navigator";
+window.getMySpot = getMySpot;
 
 let map = null;
-const houseStore = "houseStore";
 
 export default {
   name: "MapView",
-
   data() {
     return {
-      map,
-
-      markerPositions1: [
-        [37.564343, 126.947613],
-        [37.564343, 126.937611],
-      ],
       markers: [],
       positions: [],
-      // 지도 위치 움직일 때 값이 저장되도록 하기 위해
-      level: 0,
-      lat: 0,
-      lng: 0,
 
       //남서쪽 북동쪽
-      swLat: 0,
-      swLng: 0,
-      neLat: 0,
-      neLng: 0,
+      // 지도 위치 움직일 때 값이 저장되도록 하기 위해
+      mapDetail: {
+        level: 0,
+        cLat: 0,
+        cLng: 0,
+        swLat: 0,
+        swLng: 0,
+        neLat: 0,
+        neLng: 0,
+      },
+      me: null,
     };
+  },
+  computed: {
+    ...mapState("houseStore", ["aptList"]),
+  },
+  watch: {
+    aptList: function (newValue) {
+      this.positions = newValue.map((val) => ({
+        title: val.apartmentName,
+        latlng: new kakao.maps.LatLng(parseFloat(val.lat), parseFloat(val.lng)),
+      }));
+    },
+    mapDetail: {
+      deep: true,
+      handler(value) {
+        this.getMarkerList(value);
+      },
+    },
+    positions: function (newValue) {
+      this.flushMarker(this.markers);
+      this.createMarker(newValue);
+    },
+    me: function ({ lat, lng }) {
+      var moveLatLon = new kakao.maps.LatLng(lat, lng);
+      // 지도 중심을 이동 시킵니다
+      map.setCenter(moveLatLon);
+    },
   },
   methods: {
     ...mapActions("houseStore", ["getMarkerList"]),
-
+    whereAmI: async function () {
+      let where = await getMySpot();
+      this.me = where;
+    },
+    updateMapInfo: debounce(function () {
+      this.mapDetail = getMapInfo(map);
+    }, 500),
     initMap() {
       var mapContainer = document.getElementById("map"),
         mapOption = {
-          center: new kakao.maps.LatLng(37.564343, 126.947613), // 지도의 중심좌표
-          level: 3, // 지도의 확대 레벨
+          center: new kakao.maps.LatLng(
+            MAP_INITIAL_SPOT[0],
+            MAP_INITIAL_SPOT[1],
+          ), // 지도의 중심좌표
+          level: MAP_INITIAL_LEVEL, // 지도의 확대 레벨
         };
       /* eslint-disable */
       map = new window.kakao.maps.Map(mapContainer, mapOption);
@@ -70,36 +110,7 @@ export default {
       map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
       // 지도가 이동, 확대, 축소로 인해 중심좌표가 변경될 때
-      kakao.maps.event.addListener(
-        map,
-        "bounds_changed",
-        debounce(() => {
-          // 지도 영역정보를 얻어옵니다
-          var bounds = map.getBounds();
-
-          // 영역정보의 남서쪽 정보
-          var swLatlng = bounds.getSouthWest();
-          // 영역정보의 북동쪽 정보
-          var neLatlng = bounds.getNorthEast();
-
-          this.swLat = swLatlng.getLat();
-          this.swLng = swLatlng.getLng();
-          this.neLat = neLatlng.getLat();
-          this.neLng = neLatlng.getLng();
-
-          this.getMarkerList({
-            swLat: this.swLat,
-            swLng: this.swLng,
-            neLat: this.neLat,
-            neLng: this.neLng,
-          });
-        }, 200),
-      );
-
-      // 클릭 이벤트
-      kakao.maps.event.addListener(map, "mousedown", (mouseEvent) => {
-        console.log(mouseEvent.latLng.getLat());
-      });
+      kakao.maps.event.addListener(map, "bounds_changed", this.updateMapInfo);
     },
 
     curPos() {
@@ -184,22 +195,6 @@ export default {
       });
     },
   },
-
-  computed: {
-    ...mapState(houseStore, ["aptList"]),
-  },
-  watch: {
-    aptList: function (newValue) {
-      this.positions = newValue.map((val) => ({
-        title: val.apartmentName,
-        latlng: new kakao.maps.LatLng(parseFloat(val.lat), parseFloat(val.lng)),
-      }));
-    },
-    positions: function (newValue) {
-      this.flushMarker(this.markers);
-      this.createMarker(newValue);
-    },
-  },
   mounted() {
     if (window.kakao && window.kakao.maps) {
       this.initMap();
@@ -217,6 +212,9 @@ export default {
 </script>
 
 <style scoped>
+i {
+  font-size: 16px;
+}
 #sidebar {
   max-width: 375px;
   width: 100%;
@@ -227,8 +225,10 @@ export default {
   height: 100vh;
 }
 
-#btn-cur {
-  position: absolute;
-  z-index: 2;
+#map-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  height: 100%;
 }
 </style>
