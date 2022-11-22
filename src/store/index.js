@@ -3,14 +3,18 @@ import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
 
 import auth from "./auth";
-import houseStore from "./houseStore";
+import house from "./house";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
     auth,
-    houseStore,
+    house,
   },
-  plugins: [createPersistedState()],
+  plugins: [
+    createPersistedState({
+      paths: ["auth"],
+    }),
+  ],
 });

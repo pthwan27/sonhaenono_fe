@@ -19,8 +19,7 @@
 
 <script>
 import { debounce } from "lodash";
-import { mapState } from "vuex";
-import { mapActions } from "vuex";
+import { mapState, mapGetters, mapActions } from "vuex";
 import {
   KAKAO_MAP_API_KEY,
   MAP_INITIAL_SPOT,
@@ -32,8 +31,6 @@ import { getMySpot } from "@/common/navigator";
 
 import APT_IMG from "@/assets/map/apartment.svg";
 import APT_MY_HOUSE from "@/assets/map/house.svg";
-
-window.getMySpot = getMySpot;
 
 let map = null;
 
@@ -59,7 +56,8 @@ export default {
     };
   },
   computed: {
-    ...mapState("houseStore", ["aptList"]),
+    ...mapState("house", ["aptList"]),
+    ...mapGetters("house", ["getSelectedHouseInfo"]),
   },
   watch: {
     aptList: function (newValue) {
@@ -90,7 +88,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("houseStore", ["getMarkerList"]),
+    ...mapActions("house", ["getMarkerList", "getHouseByPnu"]),
     openNotification({ message, color = "primary" }) {
       this.$vs.notification({
         flat: true,
@@ -194,7 +192,7 @@ export default {
     },
     clickEventAPT(apt) {
       return () => {
-        console.log("CLICK APT PNU=", apt.pnu);
+        this.getHouseByPnu(apt.pnu);
       };
     },
   },
