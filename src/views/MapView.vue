@@ -4,8 +4,10 @@
       좌표찍어보기
     </b-button>
 
-    <b-button id="btn-cur" @click="temp()"> 현재좌표 </b-button>
-
+    <b-button id="btn-cur" @click="curPos()"> 현재좌표 </b-button>
+    <div>
+      {{ markerPositions1 }}
+    </div>
     <div id="map"></div>
   </div>
 </template>
@@ -25,6 +27,7 @@ export default {
   data() {
     return {
       map,
+
       markerPositions1: [
         [37.564343, 126.947613],
         [37.564343, 126.937611],
@@ -45,9 +48,7 @@ export default {
   },
   methods: {
     ...mapActions("houseStore", ["getMarkerList"]),
-    temp() {
-      this.getMarkerList(this.swLat, this.swLng, this.neLat, this.neLng);
-    },
+
     initMap() {
       var mapContainer = document.getElementById("map"),
         mapOption = {
@@ -70,25 +71,25 @@ export default {
       kakao.maps.event.addListener(
         map,
         "bounds_changed",
-        debounce(function () {
+        debounce(() => {
           // 지도 영역정보를 얻어옵니다
           var bounds = map.getBounds();
 
           // 영역정보의 남서쪽 정보
           var swLatlng = bounds.getSouthWest();
           // 영역정보의 북동쪽 정보
-          var neLatlng = bounds.getSouthWest();
+          var neLatlng = bounds.getNorthEast();
 
           this.swLat = swLatlng.getLat();
           this.swLng = swLatlng.getLng();
           this.neLat = neLatlng.getLat();
           this.neLng = neLatlng.getLng();
 
-          houseStore.dispatch("getMarkerList", {
-            southWestLat: this.swLat,
-            southWestlng: this.swLng,
-            norSthEastLat: this.neLat,
-            northEastlng: this.neLng,
+          this.getMarkerList({
+            swLat: this.swLat,
+            swLng: this.swLng,
+            neLat: this.neLat,
+            neLng: this.neLng,
           });
         }, 200),
       );
@@ -99,7 +100,7 @@ export default {
       });
     },
 
-    currentPos() {
+    curPos() {
       if (navigator.geolocation) {
         // GeoLocation을 이용해서 접속 위치를 얻어옵니다
         navigator.geolocation.getCurrentPosition(function (position) {
@@ -193,6 +194,10 @@ export default {
   },
   computed: {
     ...mapState(houseStore, ["markerPositions"]),
+
+    changeMarker() {
+      return this.$store.state.markerPositions;
+    },
   },
 };
 </script>

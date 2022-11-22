@@ -16,12 +16,12 @@ const houseStore = {
     },
   },
   actions: {
-    getMarkerList: ({ commit }, swLat, swLng, neLat, neLng) => {
+    getMarkerList: ({ commit }, payload) => {
       const params = {
-        southWestLat: swLat,
-        southWestlng: swLng,
-        northEastLat: neLat,
-        northEastlng: neLng,
+        southWestLat: payload.swLat,
+        southWestLng: payload.swLng,
+        northEastLat: payload.neLat,
+        northEastLng: payload.neLng,
       };
       markerList(
         params,
