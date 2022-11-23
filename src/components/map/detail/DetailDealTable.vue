@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { getPyungsu } from "@/common/map";
 export default {
   name: "DetailDealTable",
   props: {
@@ -36,7 +37,7 @@ export default {
       return this.deals.map((deal) => ({
         가격: `${deal.dealAmount}만원`,
         층: deal.floor,
-        면적: deal.area,
+        면적: `${getPyungsu(deal.area)}평`,
         거래일: `${deal.dealYear}.${deal.dealMonth}.${deal.dealDay}`,
       }));
     },

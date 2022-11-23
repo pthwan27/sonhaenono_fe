@@ -47,14 +47,6 @@ export default {
   name: "DetailChart",
   components: { DetailDealTable },
   props: {
-    chartId: {
-      type: String,
-      default: "line-chart",
-    },
-    datasetIdKey: {
-      type: String,
-      default: "label",
-    },
     width: {
       type: Number,
       default: 375,
@@ -63,25 +55,10 @@ export default {
       type: Number,
       default: 200,
     },
-    cssClasses: {
-      default: "",
-      type: String,
-    },
-    styles: {
-      type: Object,
-      default: () => {},
-    },
-    plugins: {
-      type: Array,
-      default: () => [],
-    },
     deal: {
       type: Object,
       default: null,
     },
-  },
-  data() {
-    return {};
   },
   watch: {
     deal: {
