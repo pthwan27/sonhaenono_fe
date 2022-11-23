@@ -35,12 +35,7 @@
     </div>
     <vs-pagination v-model="page" :length="$vs.getLength(article, max)" />
     <div
-      style="
-        display: inline-flex;
-        position: absolute;
-        right: 1rem;
-        bottom: 1rem;
-      ">
+      style="display: inline-flex; position: fixed; right: 1rem; bottom: 1rem">
       <template icon>
         <i
           id="addArticleBtn"
