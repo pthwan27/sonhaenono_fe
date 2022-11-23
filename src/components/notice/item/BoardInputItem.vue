@@ -155,7 +155,7 @@ export default {
         })
         .catch(({ response }) => {
           if (response.status == "401") {
-            alert("수정 할 수 없습니다");
+            alert("수정 할 권한이 없습니다");
           }
         });
     },

@@ -26,10 +26,10 @@
       <b-card-subTitle>
         <b-row>
           <b-col class="text-left">
-            <h6>{{ `${article.memberId}` }}</h6>
+            <h6>{{ article.memberId }}</h6>
           </b-col>
           <b-col class="text-right">
-            <h6>{{ `${article.createdAt} ` }}</h6>
+            <h6>{{ article.createdAt | dataFormat }}</h6>
           </b-col>
         </b-row>
       </b-card-subTitle>
@@ -57,7 +57,7 @@
             </vs-avatar>
             {{ comment.memberId }}
           </div>
-          <p>시각: {{ comment.replyAt }}</p>
+          <p>시각: {{ comment.replyAt | dataFormat }}</p>
           <div>{{ index + 1 }}. {{ comment.content }}</div>
         </div>
       </div>
@@ -93,6 +93,12 @@ export default {
       if (this.article.content)
         return this.article.content.split("\n").join("<br>");
       return "";
+    },
+  },
+
+  filters: {
+    dataFormat(data) {
+      return new Date(Date.parse(data)).toLocaleString();
     },
   },
 
