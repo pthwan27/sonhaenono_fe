@@ -38,7 +38,7 @@
 
       <b-card-text class="text-left">
         <p></p>
-        <div v-html="message"></div>
+        <div v-text="message"></div>
       </b-card-text>
     </b-card>
     <hr class="mt-5 hr-div" />

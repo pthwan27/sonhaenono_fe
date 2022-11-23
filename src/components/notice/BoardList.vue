@@ -2,10 +2,13 @@
   <div>
     <b-container>
       <b-card-group deck v-for="article in articles" :key="article.no">
-        <b-card style="max-width: 90%" class="mt-4" body-border-variant="none">
+        <b-card
+          style="max-width: 90%"
+          class="mt-3 mb-3"
+          body-border-variant="none">
           <b-card-body>
             <b-card-title>
-              {{ article.no }}.{{ article.subject }}
+              {{ article.subject }}
             </b-card-title>
 
             <b-card-sub-title class="mb-4 mt-1">
@@ -32,27 +35,31 @@
           @click="active = !active"></i>
       </template>
     </div>
-    <vs-dialog scroll overflow-hidden prevent-close auto-width v-model="active">
-      <template #header>
-        <h3>공지사항 등록하기</h3>
-      </template>
-      <div class="con-content">
-        <div class="centerx labelx">
-          <div>
-            <label for="subject">제목 : </label>
-            <input id="subject" v-model="form.subject" />
-          </div>
-          <div>
-            <label for="content">제목 : </label>
-            <textarea id="content" v-model="form.content"></textarea>
-          </div>
-          <div>{{ form.errorMessage }}</div>
-        </div>
-      </div>
 
-      <template #footer>
-        <vs-button gradient @click="saveForm"> 저장 </vs-button>
+    <div v-else>관리자만 추가가능</div>
+
+    <vs-dialog
+      class="dialog-modal"
+      scroll
+      overflow-hidden
+      prevent-close
+      v-model="active">
+      <template #header>
+        <h3 class="mt-2" style="font-weight: bold">공지사항 등록하기</h3>
       </template>
+      <div class="center content-inputs mt-3">
+        <vs-input label-placeholder="제목" v-model="form.subject" />
+      </div>
+      <div class="center content-inputs mt-2">
+        <textarea
+          class="noresize textarea-modal"
+          rows="13"
+          cols="47"
+          v-model="form.content" />
+      </div>
+      <div>
+        <vs-button class="float-right mb-2" @click="saveForm"> 저장 </vs-button>
+      </div>
     </vs-dialog>
   </div>
 </template>
@@ -61,6 +68,8 @@
 import http from "@/api/http";
 import BoardItemView from "@/components/notice/item/BoardItemView.vue";
 import { mapState } from "vuex";
+
+import { mapGetters } from "vuex";
 export default {
   components: { BoardItemView },
   name: "BoardList",
@@ -77,8 +86,10 @@ export default {
       },
     };
   },
+
   computed: {
-    ...mapState("auth", ["user", "isAuthenticated", "isAdmin"]),
+    ...mapState("auth", ["user", "isAuthenticated"]),
+    ...mapGetters("auth", ["isAdmin"]),
   },
   created() {
     http.get(`/notice`).then(({ data }) => {
@@ -86,27 +97,37 @@ export default {
       console.log(this.articles);
     });
   },
+  filters: {
+    dataFormat(data) {
+      return new Date(Date.parse(data)).toLocaleString();
+    },
+  },
   methods: {
     saveForm() {
       this.form.errorMessage = "";
       http
         .post("/notice", {
-          subject: this.subject,
-          content: this.content,
+          subject: this.form.subject,
+          content: this.form.content,
+          type: "NOTICE",
         })
         .then(({ data }) => {
           if (data) {
             this.closeModal();
+            window.location.reload(true);
           }
         })
         .catch(({ response }) => {
+          console.log(this.form);
           this.form.errorMessage = response.data.errorMessage;
+          alert(this.form.errorMessage);
         });
     },
     closeModal() {
       this.form = {
         subject: "",
         content: "",
+        type: "",
       };
       this.active = false;
     },
@@ -139,5 +160,25 @@ export default {
 }
 .labelx .vs-input {
   margin: 10px;
+}
+
+.dialog-modal {
+  padding: 2px;
+}
+.vs-dialog__header {
+  height: 100%;
+}
+.vs-dialog__content {
+  min-height: 470px;
+}
+.noresize {
+  resize: none;
+}
+.textarea-modal {
+  overflow: hidden;
+  border-radius: 8px;
+  border: none;
+  background-color: #f4f7f8;
+  padding: 10px 10px 10px 10px;
 }
 </style>
