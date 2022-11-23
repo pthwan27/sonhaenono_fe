@@ -12,7 +12,7 @@ const house = {
     aptList: [],
     selected_pnu: "",
     selected_apt: null,
-    selected_apt_deal: [],
+    selected_apt_deal: null,
     selected_apt_detail: null,
   },
   getters: {
@@ -33,7 +33,7 @@ const house = {
       state.selected_apt = aptInfo;
     },
     SET_SELECTED_APT_DEAL(state, aptDeals) {
-      state.selected_apt_deal = [...aptDeals];
+      state.selected_apt_deal = aptDeals;
     },
     SET_SELECTED_APT_DETAIL(state, aptDetail) {
       state.selected_apt_detail = aptDetail;
@@ -41,7 +41,7 @@ const house = {
     RESET_HOUSE(state) {
       state.selected_pnu = "";
       state.selected_apt = null;
-      state.selected_apt_deal = [];
+      state.selected_apt_deal = null;
       state.selected_apt_detail = null;
     },
     SET_CURRENT_PNU(state, pnu) {

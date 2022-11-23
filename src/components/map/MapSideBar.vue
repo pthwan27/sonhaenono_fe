@@ -4,8 +4,8 @@
     <div v-if="getSelectedHouseInfo.selectPnu && getSelectedHouseInfo.simple">
       <detail-header
         :aptName="getSelectedHouseInfo.simple.apartmentName"
-        :address="`${getSelectedHouseInfo.simple.dong} ${getSelectedHouseInfo.simple.jibun}`"></detail-header>
-      {{ getSelectedHouseInfo }}
+        :address="`${getSelectedHouseInfo.simple.dong} ${getSelectedHouseInfo.simple.jibun}`" />
+      <detail-chart :deal="getSelectedHouseInfo.deal" />
     </div>
     <!-- 선택한 곳이 없을 경우 -->
     <div v-else></div>
@@ -14,10 +14,11 @@
 
 <script>
 import { mapGetters } from "vuex";
-import DetailHeader from "@/components/map/detail/DeatilHeader.vue";
+import DetailHeader from "@/components/map/detail/DeatilHeader";
+import DetailChart from "@/components/map/detail/DetailChart";
 export default {
   name: "MapSideBar",
-  components: { DetailHeader },
+  components: { DetailHeader, DetailChart },
   data() {
     return {
       selected: false,
