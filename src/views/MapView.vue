@@ -10,7 +10,7 @@
 
 <script>
 import { debounce } from "lodash";
-import { mapState, mapGetters, mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 import {
   KAKAO_MAP_API_KEY,
   MAP_INITIAL_SPOT,
@@ -52,8 +52,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("house", ["aptList"]),
-    ...mapGetters("house", ["getSelectedHouseInfo"]),
+    ...mapState("house", ["aptList", "selected_apt"]),
   },
   watch: {
     aptList: function (newValue) {
@@ -82,6 +81,13 @@ export default {
       }
       this.gotoMySpot(newValue);
     },
+    selected_apt: function (newValue) {
+      if (!newValue) {
+        return;
+      }
+      let latLng = this.createKakaoLatLng(newValue);
+      this.moveCenter(latLng);
+    },
   },
   methods: {
     ...mapActions("house", ["getMarkerList", "selectHouse"]),
@@ -109,10 +115,17 @@ export default {
         });
       }
     },
-    gotoMySpot({ lat, lng }) {
+    createKakaoLatLng({ lat, lng }) {
       let latLng = new kakao.maps.LatLng(lat, lng);
-      // 지도 중심을 이동 시킵니다
+      return latLng;
+    },
+    moveCenter(latLng) {
       map.setCenter(latLng);
+    },
+    gotoMySpot(spot) {
+      let latLng = this.createKakaoLatLng(spot);
+      // 지도 중심을 이동 시킵니다
+      this.moveCenter(latLng);
 
       let imageSrc = APT_MY_HOUSE, // 마커이미지의 주소입니다
         imageSize = new kakao.maps.Size(40, 40), // 마커이미지의 크기입니다

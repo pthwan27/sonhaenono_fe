@@ -18,6 +18,8 @@
     <!-- 선택한 곳이 없을 경우 -->
     <div v-else>
       <search-bar></search-bar>
+      <div style="width: 100%; height: 300px"></div>
+      <news-bar></news-bar>
     </div>
   </div>
 </template>
@@ -28,14 +30,13 @@ import DetailHeader from "@/components/map/detail/DeatilHeader";
 import DetailChart from "@/components/map/detail/DetailChart";
 import DetailRoadView from "@/components/map/detail/DetailRoadView";
 import SearchBar from "@/components/map/console/SearchBar";
+import NewsBar from "./console/NewsBar";
 
 export default {
   name: "MapSideBar",
-  components: { DetailHeader, DetailChart, DetailRoadView, SearchBar },
+  components: { DetailHeader, DetailChart, DetailRoadView, SearchBar, NewsBar },
   data() {
-    return {
-      selected: false,
-    };
+    return {};
   },
   computed: {
     ...mapGetters("house", ["getSelectedHouseInfo"]),

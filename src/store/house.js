@@ -1,5 +1,5 @@
 import {
-  markerList,
+  search,
   getHouseInfoByPNU,
   getHouseDealByPNU,
   getHouseDetailByPNU,
@@ -14,6 +14,7 @@ const house = {
     selected_apt: null,
     selected_apt_deal: null,
     selected_apt_detail: null,
+    searchResults: [],
   },
   getters: {
     getSelectedHouseInfo: function (state) {
@@ -47,6 +48,12 @@ const house = {
     SET_CURRENT_PNU(state, pnu) {
       state.selected_pnu = pnu;
     },
+    SET_SEARCH_RESULT(state, aptList) {
+      state.searchResults = aptList;
+    },
+    RESET_SEARCH_RESULT(state) {
+      state.searchResults = [];
+    },
   },
   actions: {
     getMarkerList: ({ commit }, payload) => {
@@ -56,7 +63,7 @@ const house = {
         northEastLat: payload.neLat,
         northEastLng: payload.neLng,
       };
-      markerList(
+      search(
         params,
         ({ data }) => {
           commit("SET_APT_LIST", data);
@@ -98,6 +105,20 @@ const house = {
     },
     resetHouse: ({ commit }) => {
       commit("RESET_HOUSE");
+    },
+    searchByAptName: ({ commit }, payload) => {
+      const params = {
+        aptName: payload,
+      };
+      search(params, ({ data }) => {
+        commit("SET_SEARCH_RESULT", data);
+      }),
+        (err) => {
+          console.debug(err);
+        };
+    },
+    resetSearchResult({ commit }) {
+      commit("RESET_SEARCH_RESULT");
     },
   },
 };
