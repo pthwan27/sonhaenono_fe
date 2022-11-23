@@ -1,17 +1,8 @@
 <template>
-  <b-container fluid class="m-0 p-0 d-flex">
-    <div id="sidebar"></div>
+  <b-container fluid class="h-100 w-100 m-0 p-0 d-flex">
+    <map-side-bar></map-side-bar>
     <div id="map-wrapper">
-      <div
-        id="map-left_box"
-        style="position: absolute; z-index: 1001; top: 10px; left: 10px">
-        <b-button
-          v-b-tooltip.hover.right="'내위치'"
-          variant="light"
-          @click="whereAmI"
-          ><i class="bx bx-current-location"></i>
-        </b-button>
-      </div>
+      <map-left-box @whereAmI="whereAmI"></map-left-box>
       <div id="map"></div>
     </div>
   </b-container>
@@ -32,11 +23,15 @@ import { getMySpot } from "@/common/navigator";
 import APT_IMG from "@/assets/map/apartment.svg";
 import APT_MY_HOUSE from "@/assets/map/house.svg";
 
+import MapSideBar from "@/components/map/MapSideBar.vue";
+import MapLeftBox from "@/components/map/MapLeftBox.vue";
+
 let map = null;
 let clusterer = null;
 
 export default {
   name: "MapView",
+  components: { MapSideBar, MapLeftBox },
   data() {
     return {
       markers: [],
@@ -89,7 +84,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("house", ["getMarkerList", "getHouseByPnu"]),
+    ...mapActions("house", ["getMarkerList", "selectHouse"]),
     openNotification({ message, color = "primary" }) {
       this.$vs.notification({
         flat: true,
@@ -206,7 +201,7 @@ export default {
     },
     clickEventAPT(apt) {
       return () => {
-        this.getHouseByPnu(apt.pnu);
+        this.selectHouse(apt.pnu);
       };
     },
   },
@@ -231,19 +226,22 @@ i {
   font-size: 16px;
 }
 #sidebar {
+  position: relative;
   max-width: 375px;
   width: 100%;
-  height: 100vh;
+  height: 100%;
 }
 #map {
+  position: relative;
   width: 100%;
-  height: 100vh;
+  height: 100%;
 }
 
 #map-wrapper {
   position: relative;
   width: 100%;
-  overflow: hidden;
   height: 100%;
+
+  overflow: hidden;
 }
 </style>

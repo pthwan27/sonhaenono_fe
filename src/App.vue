@@ -123,8 +123,16 @@ header {
   width: 42px;
   height: 42px;
 }
+#app {
+  max-height: calc(100% - 58px);
+  height: 100%;
+  width: 100%;
+}
+html {
+  height: 100%;
+}
 body {
-  height: 100vh;
+  height: 100%;
 }
 body > * {
   transition: 0.5s;
