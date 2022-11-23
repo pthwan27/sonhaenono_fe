@@ -17,4 +17,7 @@ export default {
 #router-view {
   overflow-y: auto;
 }
+h1 {
+  text-align: center;
+}
 </style>

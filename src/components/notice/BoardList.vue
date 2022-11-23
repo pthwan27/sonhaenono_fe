@@ -1,45 +1,29 @@
 <template>
   <div>
-    <div class="div-card">
-      <vs-tr
-        :key="i"
-        v-for="(article, i) in $vs.getPage(article, page, max)"
-        :data="tr">
-        <div>
-          <vs-card type="1">
-            <template #title>
-              <h3
-                v-html="`${article.no}.${article.subject}`"
-                @click="viewArticle(article)"></h3>
-            </template>
-            <template #img>
-              <img
-                src="@/assets/temp.png"
-                alt=""
-                @click="viewArticle(article)" />
-            </template>
-            <template #text>
-              <p
-                v-html="`${article.content}`"
-                @click="viewArticle(article)"></p>
-            </template>
-            <template #interactions>
-              <vs-button danger icon>
-                <i class="bx bx-heart"></i>
-                <span class="span"> 54 </span>
-              </vs-button>
+    <b-container>
+      <b-card-group deck v-for="article in articles" :key="article.no">
+        <b-card style="max-width: 90%" class="mt-4" body-border-variant="none">
+          <b-card-body>
+            <b-card-title>
+              {{ article.no }}.{{ article.subject }}
+            </b-card-title>
 
-              <!-- 댓글 개수 icon -->
-              <!-- <vs-button class="btn-chat" shadow primary>
-                <i class="bx bx-chat"></i>
-                <span class="span"> 54 </span>
-              </vs-button> -->
-            </template>
-          </vs-card>
-        </div>
-      </vs-tr>
-    </div>
-    <vs-pagination v-model="page" :length="$vs.getLength(article, max)" />
+            <b-card-sub-title class="mb-4 mt-1">
+              <b-row>
+                <b-col class="text-left">작성자 : {{ article.memberId }}</b-col>
+                <b-col class="text-right">
+                  작성일 :
+                  {{ article.createdAt | dataFormat }}</b-col
+                >
+              </b-row>
+            </b-card-sub-title>
+          </b-card-body>
+
+          <board-item-view :comment="article.content"></board-item-view>
+        </b-card>
+      </b-card-group>
+    </b-container>
+
     <div
       style="
         display: inline-flex;
@@ -80,16 +64,16 @@
 
 <script>
 import http from "@/api/http";
+import BoardItemView from "@/components/notice/item/BoardItemView.vue";
 export default {
+  components: { BoardItemView },
   name: "BoardList",
 
   data() {
     return {
-      search: "",
-      page: 1,
-      max: 2,
-      article: [],
+      articles: [BoardItemView],
       active: false,
+      comment: "",
       form: {
         subject: "",
         content: "",
@@ -100,16 +84,11 @@ export default {
 
   created() {
     http.get(`/notice`).then(({ data }) => {
-      this.article = data;
+      this.articles = data;
+      console.log(this.articles);
     });
   },
   methods: {
-    viewArticle(article) {
-      this.$router.push({
-        name: "noticeView",
-        params: { no: article.no },
-      });
-    },
     saveForm() {
       this.form.errorMessage = "";
       http
@@ -134,29 +113,42 @@ export default {
       this.active = false;
     },
   },
+  filters: {
+    dataFormat(data) {
+      return new Date(Date.parse(data)).toLocaleString();
+    },
+  },
 };
 </script>
 
 <style>
-a:link {
-  color: black;
+.card {
+  max-width: 100%;
+  border-bottom: 1px, solid, black;
+  /* background-color: ; */
+  border-radius: 10px;
 }
-a:visited {
-  color: black;
+.card-deck {
+  display: flex;
+  justify-content: center;
 }
-a:hover {
-  color: rgba(3, 3, 3, 0.788);
+.card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.16), 0 4px 10px rgba(0, 0, 0, 0.23);
 }
-a {
-  text-decoration: none;
-}
-
 .div-card {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   margin-bottom: 15px;
 }
+.announcement__post-bullet {
+  color: #074dff;
+  margin: 0.25rem 0 0.25rem -2.5rem;
+  max-height: 1.5rem;
+  min-width: 1.875rem;
 
+  padding-left: 0.5rem rem;
+  float: left;
+}
 #addArticleBtn {
   color: #ffbf69;
   font-size: 64px;

@@ -153,7 +153,11 @@ export default {
           // 현재 route를 /list로 변경.
           this.moveList();
         })
-        .catch();
+        .catch(({ response }) => {
+          if (response.status == "401") {
+            alert("수정 할 권한이 없습니다");
+          }
+        });
     },
     moveList() {
       this.$router.push({ name: "qnalist" });
