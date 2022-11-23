@@ -87,9 +87,11 @@ export default {
     deal: {
       deep: true,
       handler(value) {
-        let data = this.averageFiltering(value.averages);
-        this.chartUpdate(data[0], data[1]);
-        _chartElem.update();
+        if (value) {
+          let data = this.averageFiltering(value.averages);
+          this.chartUpdate(data[0], data[1]);
+          _chartElem.update();
+        }
       },
     },
   },
