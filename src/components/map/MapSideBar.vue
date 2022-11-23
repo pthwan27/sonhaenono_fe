@@ -5,10 +5,15 @@
       <detail-header
         :aptName="getSelectedHouseInfo.simple.apartmentName"
         :address="`${getSelectedHouseInfo.simple.dong} ${getSelectedHouseInfo.simple.jibun}`" />
+      <detail-road-view
+        :lat="getSelectedHouseInfo.simple.lat"
+        :lng="getSelectedHouseInfo.simple.lng"></detail-road-view>
       <detail-chart :deal="getSelectedHouseInfo.deal" />
     </div>
     <!-- 선택한 곳이 없을 경우 -->
-    <div v-else></div>
+    <div v-else>
+      <search-bar></search-bar>
+    </div>
   </div>
 </template>
 
@@ -16,9 +21,12 @@
 import { mapGetters } from "vuex";
 import DetailHeader from "@/components/map/detail/DeatilHeader";
 import DetailChart from "@/components/map/detail/DetailChart";
+import DetailRoadView from "@/components/map/detail/DetailRoadView";
+import SearchBar from "@/components/map/console/SearchBar";
+
 export default {
   name: "MapSideBar",
-  components: { DetailHeader, DetailChart },
+  components: { DetailHeader, DetailChart, DetailRoadView, SearchBar },
   data() {
     return {
       selected: false,

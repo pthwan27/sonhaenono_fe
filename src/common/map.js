@@ -16,3 +16,9 @@ export function getMapInfo(map) {
     neLng: neLatLng.getLng(),
   };
 }
+
+export function getPyungsu(value) {
+  value = parseFloat(value);
+  if (isNaN(value)) return;
+  return parseInt(value * 0.3025);
+}
