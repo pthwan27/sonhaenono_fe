@@ -10,7 +10,8 @@
       v-model="currentPage"
       :total-rows="rows"
       :per-page="perPage"
-      aria-controls="my-table"></b-pagination>
+      aria-controls="my-table"
+      style="justify-content: center"></b-pagination>
   </div>
 </template>
 

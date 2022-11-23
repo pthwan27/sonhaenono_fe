@@ -17,7 +17,8 @@
         v-model="currentPage"
         :total-rows="rows"
         :per-page="perPage"
-        aria-controls="news-table"></b-pagination>
+        aria-controls="news-table"
+        style="justify-content: center"></b-pagination>
     </div>
   </div>
 </template>
@@ -81,7 +82,7 @@ export default {
   display: flex;
   align-content: center;
 }
-#news-table tr {
-  cursor: pointer;
+tr {
+  cursor: pointer !important;
 }
 </style>
