@@ -1,5 +1,3 @@
-// import http from "@/api/http";
-
 import {
   markerList,
   getHouseInfoByPNU,
@@ -12,7 +10,7 @@ const house = {
 
   state: {
     aptList: [],
-    marker: null,
+    selected_pnu: "",
     selected_apt: null,
     selected_apt_deal: [],
     selected_apt_detail: null,
@@ -20,6 +18,7 @@ const house = {
   getters: {
     getSelectedHouseInfo: function (state) {
       return {
+        selectPnu: state.selected_pnu,
         simple: state.selected_apt,
         deal: state.selected_apt_deal,
         detail: state.selected_apt_detail,
@@ -40,9 +39,13 @@ const house = {
       state.selected_apt_detail = aptDetail;
     },
     RESET_HOUSE(state) {
+      state.selected_pnu = "";
       state.selected_apt = null;
       state.selected_apt_deal = [];
       state.selected_apt_detail = null;
+    },
+    SET_CURRENT_PNU(state, pnu) {
+      state.selected_pnu = pnu;
     },
   },
   actions: {
@@ -87,7 +90,8 @@ const house = {
           console.error(err);
         };
     },
-    getHouseByPnu: ({ dispatch }, payload) => {
+    selectHouse: ({ commit, dispatch }, payload) => {
+      commit("SET_CURRENT_PNU", payload);
       dispatch("getHouseInfoByPnu", payload);
       dispatch("getHouseDealByPnu", payload);
       dispatch("getHouseDetailByPnu", payload);
