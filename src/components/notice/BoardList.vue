@@ -11,9 +11,8 @@
             <b-card-sub-title class="mb-4 mt-1">
               <b-row>
                 <b-col class="text-left">작성자 : {{ article.memberId }}</b-col>
-                <b-col class="text-right">
-                  작성일 :
-                  {{ article.createdAt | dataFormat }}</b-col
+                <b-col class="text-right"
+                  >작성일 : {{ article.createdAt | dataFormat }}</b-col
                 >
               </b-row>
             </b-card-sub-title>
@@ -23,14 +22,9 @@
         </b-card>
       </b-card-group>
     </b-container>
-
     <div
-      style="
-        display: inline-flex;
-        position: absolute;
-        right: 1rem;
-        bottom: 1rem;
-      ">
+      v-if="isAdmin"
+      style="display: inline-flex; position: fixed; right: 1rem; bottom: 1rem">
       <template icon>
         <i
           id="addArticleBtn"
@@ -55,6 +49,7 @@
           <div>{{ form.errorMessage }}</div>
         </div>
       </div>
+
       <template #footer>
         <vs-button gradient @click="saveForm"> 저장 </vs-button>
       </template>
@@ -65,6 +60,7 @@
 <script>
 import http from "@/api/http";
 import BoardItemView from "@/components/notice/item/BoardItemView.vue";
+import { mapState } from "vuex";
 export default {
   components: { BoardItemView },
   name: "BoardList",
@@ -81,7 +77,9 @@ export default {
       },
     };
   },
-
+  computed: {
+    ...mapState("auth", ["user", "isAuthenticated", "isAdmin"]),
+  },
   created() {
     http.get(`/notice`).then(({ data }) => {
       this.articles = data;
@@ -113,11 +111,6 @@ export default {
       this.active = false;
     },
   },
-  filters: {
-    dataFormat(data) {
-      return new Date(Date.parse(data)).toLocaleString();
-    },
-  },
 };
 </script>
 
@@ -128,27 +121,14 @@ export default {
   /* background-color: ; */
   border-radius: 10px;
 }
+.card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.16), 0 4px 10px rgba(0, 0, 0, 0.23);
+}
 .card-deck {
   display: flex;
   justify-content: center;
 }
-.card:hover {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.16), 0 4px 10px rgba(0, 0, 0, 0.23);
-}
-.div-card {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  margin-bottom: 15px;
-}
-.announcement__post-bullet {
-  color: #074dff;
-  margin: 0.25rem 0 0.25rem -2.5rem;
-  max-height: 1.5rem;
-  min-width: 1.875rem;
 
-  padding-left: 0.5rem rem;
-  float: left;
-}
 #addArticleBtn {
   color: #ffbf69;
   font-size: 64px;

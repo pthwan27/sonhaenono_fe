@@ -54,6 +54,7 @@
           @click="active = !active"></i>
       </template>
     </div>
+
     <vs-dialog scroll overflow-hidden prevent-close auto-width v-model="active">
       <template #header>
         <h3>Q&A 등록하기</h3>
@@ -65,7 +66,7 @@
             <input id="subject" v-model="form.subject" />
           </div>
           <div>
-            <label for="content">제목 : </label>
+            <label for="content">내용 : </label>
             <textarea id="content" v-model="form.content"></textarea>
           </div>
           <div>{{ form.errorMessage }}</div>
@@ -80,6 +81,7 @@
 
 <script>
 import http from "@/api/http";
+import { mapState } from "vuex";
 export default {
   name: "BoardList",
 
@@ -103,13 +105,23 @@ export default {
       this.article = data;
     });
   },
+  computed: {
+    ...mapState("auth", ["user", "isAuthenticated"]),
+  },
   methods: {
     viewArticle(article) {
-      this.$router.push({
-        path: `/qna`,
-        name: "qnaView",
-        params: { no: article.no },
-      });
+      console.log(this.isAuthenticated);
+      console.log(this.user);
+      if (this.isAuthenticated == true && this.user != null) {
+        this.$router.push({
+          path: `/qna`,
+          name: "qnaView",
+          params: { no: article.no },
+        });
+      } else {
+        alert("로그인한 회원만 볼 수 있습니다");
+        return;
+      }
     },
     saveForm() {
       this.form.errorMessage = "";
