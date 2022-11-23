@@ -20,5 +20,5 @@ export function getMapInfo(map) {
 export function getPyungsu(value) {
   value = parseFloat(value);
   if (isNaN(value)) return;
-  return parseInt((value / 3300) * 1000);
+  return parseInt(value * 0.3025);
 }
