@@ -1,6 +1,6 @@
 import http from "./http";
 
-function markerList(params, success, fail) {
+function search(params, success, fail) {
   http.get(`/house/search`, { params: params }).then(success).catch(fail);
 }
 
@@ -37,9 +37,4 @@ function getHouseDetailByPNU(pnu, success, fail) {
     .catch(fail);
 }
 
-export {
-  markerList,
-  getHouseInfoByPNU,
-  getHouseDealByPNU,
-  getHouseDetailByPNU,
-};
+export { search, getHouseInfoByPNU, getHouseDealByPNU, getHouseDetailByPNU };

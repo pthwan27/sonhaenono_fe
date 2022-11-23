@@ -33,9 +33,7 @@ export default {
   name: "MapSideBar",
   components: { DetailHeader, DetailChart, DetailRoadView, SearchBar },
   data() {
-    return {
-      selected: false,
-    };
+    return {};
   },
   computed: {
     ...mapGetters("house", ["getSelectedHouseInfo"]),
