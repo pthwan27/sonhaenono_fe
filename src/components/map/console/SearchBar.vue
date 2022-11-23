@@ -7,7 +7,7 @@
         @input="changeQuery"
         @keypress="checkEnter" />
     </div>
-    <div class="search-list">
+    <div class="search-list" v-show="searchResults.length">
       <div
         class="list-item"
         v-for="result in searchResults"
