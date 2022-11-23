@@ -1,49 +1,51 @@
 <template>
   <div class="detail_chart">
-    <div class="chart">
-      <LineChartGenerator
-        :chart-options="chartOptions"
-        :chart-data="chartData"
-        :chart-id="chartId"
-        :dataset-id-key="datasetIdKey"
-        :plugins="plugins"
-        :css-classes="cssClasses"
-        :styles="styles"
-        :width="width"
-        :height="height" />
+    <div class="chart mb-2">
+      <canvas ref="lineChart" :height="height" :width="width"></canvas>
+    </div>
+    <div class="detail_table">
+      <detail-deal-table :deals="deal.deals"></detail-deal-table>
     </div>
   </div>
 </template>
 
 <script>
-import { Line as LineChartGenerator } from "vue-chartjs/legacy";
+import { Chart as ChartJS, registerables } from "chart.js";
+import DetailDealTable from "./DetailDealTable";
 
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  LineElement,
-  LinearScale,
-  CategoryScale,
-  PointElement,
-} from "chart.js";
+ChartJS.register(...registerables);
 
-ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  LineElement,
-  LinearScale,
-  CategoryScale,
-  PointElement,
-);
+let _chartElem = null;
+let chartData = {
+  labels: [],
+  datasets: [
+    {
+      backgroundColor: "#f87979",
+      data: [],
+    },
+  ],
+};
+let chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      display: false,
+    },
+    title: {
+      display: false,
+    },
+  },
+  scales: {
+    y: {
+      beginAtZero: true,
+    },
+  },
+};
 
 export default {
   name: "DetailChart",
-  components: {
-    LineChartGenerator,
-  },
+  components: { DetailDealTable },
   props: {
     chartId: {
       type: String,
@@ -74,37 +76,61 @@ export default {
       default: () => [],
     },
     deal: {
-      type: Array,
-      default: () => [],
+      type: Object,
+      default: null,
     },
   },
   data() {
-    return {
-      chartData: {
-        labels: ["2019", "2020", "2021", "2022"],
-        datasets: [
-          {
-            backgroundColor: "#f87979",
-            data: [40, 39, 10, 40],
-          },
-        ],
-      },
-      chartOptions: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          },
-          title: {
-            display: false,
-          },
-        },
-      },
-    };
+    return {};
   },
-  created() {
-    console.log(this.deal);
+  watch: {
+    deal: {
+      deep: true,
+      handler(value) {
+        let data = this.averageFiltering(value.averages);
+        this.chartUpdate(data[0], data[1]);
+        _chartElem.update();
+      },
+    },
+  },
+  methods: {
+    averageFiltering(averages = []) {
+      let labels = [];
+      let averageDeals = [];
+
+      averages.forEach((avg) => {
+        labels.push(avg.dealYear);
+        averageDeals.push(avg.averageDeal);
+      });
+
+      return [labels, averageDeals];
+    },
+    chartUpdate(labels, averages) {
+      chartData.labels = labels;
+      chartData.datasets[0].data = averages;
+    },
+    chartCreate() {
+      _chartElem = new ChartJS(this.$refs.lineChart, {
+        type: "line",
+        data: chartData,
+        options: chartOptions,
+      });
+    },
+    chartDestroy() {
+      if (_chartElem) {
+        _chartElem.destroy();
+      }
+    },
+  },
+  mounted() {
+    this.$nextTick(function () {
+      let data = this.averageFiltering(this.deal.averages);
+      this.chartUpdate(data[0], data[1]);
+      this.chartCreate();
+    });
+  },
+  destroyed() {
+    this.chartDestroy();
   },
 };
 </script>
@@ -112,6 +138,6 @@ export default {
 <style scoped>
 .detail_chart {
   border-top: 1px solid #fff;
-  padding: 1rem 0;
+  padding: 1rem 1rem;
 }
 </style>
