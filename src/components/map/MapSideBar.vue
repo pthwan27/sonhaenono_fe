@@ -1,7 +1,12 @@
 <template>
   <div id="sidebar">
     <!-- 선택한 곳이 있을 경우 -->
-    <div v-if="getSelectedHouseInfo.selectPnu && getSelectedHouseInfo.simple">
+    <div
+      v-if="
+        getSelectedHouseInfo.selectPnu &&
+        getSelectedHouseInfo.simple &&
+        getSelectedHouseInfo.deal
+      ">
       <detail-header
         :aptName="getSelectedHouseInfo.simple.apartmentName"
         :address="`${getSelectedHouseInfo.simple.dong} ${getSelectedHouseInfo.simple.jibun}`" />
