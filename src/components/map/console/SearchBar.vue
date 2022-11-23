@@ -127,5 +127,7 @@ export default {
 .search-list {
   height: 200px;
   overflow-y: scroll;
+  position: absolute;
+  width: 100%;
 }
 </style>
