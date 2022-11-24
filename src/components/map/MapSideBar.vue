@@ -18,8 +18,9 @@
     <!-- 선택한 곳이 없을 경우 -->
     <div v-else>
       <search-bar></search-bar>
-      <div style="width: 100%; height: 300px"></div>
+      <menus-bar></menus-bar>
       <news-bar></news-bar>
+      <youtube-recommand-bar></youtube-recommand-bar>
     </div>
   </div>
 </template>
@@ -31,10 +32,20 @@ import DetailChart from "@/components/map/detail/DetailChart";
 import DetailRoadView from "@/components/map/detail/DetailRoadView";
 import SearchBar from "@/components/map/console/SearchBar";
 import NewsBar from "./console/NewsBar";
+import MenusBar from "./console/MenusBar";
+import YoutubeRecommandBar from "./console/YoutubeRecommandBar.vue";
 
 export default {
   name: "MapSideBar",
-  components: { DetailHeader, DetailChart, DetailRoadView, SearchBar, NewsBar },
+  components: {
+    DetailHeader,
+    DetailChart,
+    DetailRoadView,
+    SearchBar,
+    NewsBar,
+    MenusBar,
+    YoutubeRecommandBar,
+  },
   data() {
     return {};
   },
