@@ -56,26 +56,28 @@
       </template>
     </div>
 
-    <vs-dialog scroll overflow-hidden prevent-close auto-width v-model="active">
+    <vs-dialog
+      class="dialog-modal"
+      scroll
+      overflow-hidden
+      prevent-close
+      v-model="active">
       <template #header>
-        <h3>Q&A 등록하기</h3>
+        <h3 class="mt-2" style="font-weight: bold">Q&A 등록하기</h3>
       </template>
-      <div class="con-content">
-        <div class="centerx labelx">
-          <div>
-            <label for="subject">제목 : </label>
-            <input id="subject" v-model="form.subject" />
-          </div>
-          <div>
-            <label for="content">내용 : </label>
-            <textarea id="content" v-model="form.content"></textarea>
-          </div>
-          <div>{{ form.errorMessage }}</div>
-        </div>
+      <div class="center content-inputs mt-3">
+        <vs-input label-placeholder="제목" v-model="form.subject" />
       </div>
-      <template #footer>
-        <vs-button gradient @click="saveForm"> 저장 </vs-button>
-      </template>
+      <div class="center content-inputs mt-2">
+        <textarea
+          class="noresize textarea-modal"
+          rows="13"
+          cols="47"
+          v-model="form.content" />
+      </div>
+      <div>
+        <vs-button class="float-right mb-2" @click="saveForm"> 저장 </vs-button>
+      </div>
     </vs-dialog>
   </div>
 </template>
@@ -97,6 +99,7 @@ export default {
       form: {
         subject: "",
         content: "",
+        type: "",
         errorMessage: "",
       },
       imageUrl: "https://picsum.photos/",
@@ -130,12 +133,14 @@ export default {
       this.form.errorMessage = "";
       http
         .post("/qna", {
-          subject: this.subject,
-          content: this.content,
+          subject: this.form.subject,
+          content: this.form.content,
+          type: "QNA",
         })
         .then(({ data }) => {
           if (data) {
             this.closeModal();
+            window.location.reload(true);
           }
         })
         .catch(({ response }) => {
@@ -146,6 +151,7 @@ export default {
       this.form = {
         subject: "",
         content: "",
+        type: "",
       };
       this.active = false;
     },
@@ -173,5 +179,31 @@ export default {
 }
 .labelx .vs-input {
   margin: 10px;
+}
+.card-deck {
+  display: flex;
+  justify-content: center;
+}
+.dialog-modal {
+  padding: 2px;
+}
+.vs-input {
+  width: 90%;
+}
+.vs-dialog__header {
+  height: 100%;
+}
+.vs-dialog__content {
+  min-height: 470px;
+}
+.noresize {
+  resize: none;
+}
+.textarea-modal {
+  overflow: hidden;
+  border-radius: 8px;
+  border: none;
+  background-color: #f4f7f8;
+  padding: 10px 10px 10px 10px;
 }
 </style>

@@ -186,6 +186,9 @@ export default {
 .dialog-modal {
   padding: 2px;
 }
+.vs-input {
+  width: 90%;
+}
 .vs-dialog__header {
   height: 100%;
 }
