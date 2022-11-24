@@ -45,8 +45,6 @@
       </template>
     </div>
 
-    <div v-else>관리자만 추가가능</div>
-
     <vs-dialog
       class="dialog-modal"
       scroll
