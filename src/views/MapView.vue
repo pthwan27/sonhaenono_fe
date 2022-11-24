@@ -2,7 +2,7 @@
   <b-container fluid class="h-100 w-100 m-0 p-0 d-flex">
     <map-side-bar></map-side-bar>
     <div id="map-wrapper">
-      <map-left-box @whereAmI="whereAmI"></map-left-box>
+      <map-left-box @whereAmI="whereAmI" :mapDetail="mapDetail"></map-left-box>
       <div id="map"></div>
     </div>
   </b-container>
@@ -22,6 +22,7 @@ import { getMySpot } from "@/common/navigator";
 
 import APT_IMG from "@/assets/map/apartment.svg";
 import APT_MY_HOUSE from "@/assets/map/house.svg";
+import COFEE_IMG from "@/assets/map/coffee-cup.png";
 
 import MapSideBar from "@/components/map/MapSideBar.vue";
 import MapLeftBox from "@/components/map/MapLeftBox.vue";
@@ -36,7 +37,7 @@ export default {
     return {
       markers: [],
       positions: [],
-
+      coffeeMarkers: [],
       //남서쪽 북동쪽
       // 지도 위치 움직일 때 값이 저장되도록 하기 위해
       mapDetail: {
@@ -52,7 +53,14 @@ export default {
     };
   },
   computed: {
-    ...mapState("house", ["aptList", "selected_apt"]),
+    ...mapState("house", [
+      "aptList",
+      "selected_apt",
+      "near_coffee",
+      "near_foods",
+      "coffeeOn",
+      "foodsOn",
+    ]),
   },
   watch: {
     aptList: function (newValue) {
@@ -88,9 +96,32 @@ export default {
       let latLng = this.createKakaoLatLng(newValue);
       this.moveCenter(latLng);
     },
+    foodsOn: function (value) {
+      if (value) {
+        this.searchNearFoods(this.mapDetail);
+      }
+    },
+    coffeeOn: function (value) {
+      if (value) {
+        this.searchNearCoffee(this.mapDetail);
+      }
+    },
+    near_coffee: function (newValue) {
+      this.createCoffeeMarker(newValue);
+    },
+    coffeeMarkers: function (newValue) {
+      this.showCoffeeMarker(newValue);
+    },
+    // near_foods: function (value) {},
   },
   methods: {
-    ...mapActions("house", ["getMarkerList", "selectHouse"]),
+    ...mapActions("house", [
+      "getMarkerList",
+      "selectHouse",
+      "searchNearCoffee",
+      "searchNearFoods",
+    ]),
+
     openNotification({ message, color = "primary" }) {
       this.$vs.notification({
         flat: true,
@@ -172,21 +203,30 @@ export default {
     flushMarker(markers = []) {
       markers.forEach((marker) => marker.setMap(null));
     },
-    showMarker(markers = []) {
+    showCoffeeMarker(markers = []) {
+      console.log(markers);
       if (this.mapDetail.level >= 5) {
-        if (clusterer) {
-          clusterer.clear();
-        }
+        console.log("level 5이상 : flush");
+        return this.flushMarker(markers);
+      }
+      console.log("level 5 이하 : 화면 그리기");
+      markers.forEach((marker) => marker.setMap(map));
+    },
+    showMarker(markers = []) {
+      //  if (this.mapDetail.level >= 5) {
+      if (clusterer) {
+        clusterer.clear();
+      } else {
         clusterer = new kakao.maps.MarkerClusterer({
           map,
           averageCenter: true,
           minLevel: this.mapDetail.level,
         });
-
-        clusterer.addMarkers(markers);
-        return;
       }
-      markers.forEach((marker) => marker.setMap(map));
+      clusterer.addMarkers(markers);
+      return;
+      //  }
+      // markers.forEach((marker) => marker.setMap(map));
     },
     createMarkerClickEvent(marker, event) {
       kakao.maps.event.addListener(marker, "click", event);
@@ -209,6 +249,26 @@ export default {
         });
 
         this.createMarkerClickEvent(marker, this.clickEventAPT(ps));
+        return marker;
+      });
+    },
+    createCoffeeMarker(positions = []) {
+      let imageSrc = COFEE_IMG;
+      let imageSize = new kakao.maps.Size(40, 40);
+      let imageOption = { offset: new kakao.maps.Point(20, 40) };
+
+      let markerImage = new kakao.maps.MarkerImage(
+        imageSrc,
+        imageSize,
+        imageOption,
+      );
+
+      this.coffeeMarkers = positions.map((ps) => {
+        let marker = new kakao.maps.Marker({
+          map,
+          position: ps.latlng,
+          image: markerImage,
+        });
         return marker;
       });
     },

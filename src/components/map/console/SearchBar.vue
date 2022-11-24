@@ -93,6 +93,8 @@ export default {
 
   background-color: #ff9f1c;
   color: #fff;
+
+  border-bottom: 1px solid black;
 }
 #search-bar input {
   width: 100%;

@@ -4,12 +4,17 @@ import {
   getHouseDealByPNU,
   getHouseDetailByPNU,
 } from "@/api/house";
+import { searchStore } from "@/api/store";
 
 const house = {
   namespaced: true,
 
   state: {
     aptList: [],
+    near_coffee: [],
+    coffeeOn: false,
+    near_foods: [],
+    foodsOn: false,
     selected_pnu: "",
     selected_apt: null,
     selected_apt_deal: null,
@@ -54,15 +59,39 @@ const house = {
     RESET_SEARCH_RESULT(state) {
       state.searchResults = [];
     },
+    TOGGLE_COFFEE_ON(state) {
+      state.coffeeOn = !state.coffeeOn;
+      if (!state.coffeeOn) {
+        state.near_coffee = [];
+      }
+    },
+    TOGGLE_FOODS_ON(state) {
+      state.foodsOn = !state.foodsOn;
+      if (!state.foodsOn) {
+        state.near_foods = [];
+      }
+    },
+    SET_NEAR_COFFEE(state, coffees) {
+      state.near_coffee = coffees;
+    },
+    SET_NEAR_FOODS(state, foods) {
+      state.near_foods = foods;
+    },
   },
   actions: {
-    getMarkerList: ({ commit }, payload) => {
+    getMarkerList: ({ commit, dispatch, state }, payload) => {
       const params = {
         southWestLat: payload.swLat,
         southWestLng: payload.swLng,
         northEastLat: payload.neLat,
         northEastLng: payload.neLng,
       };
+      if (state.coffeeOn && payload.level < 5) {
+        dispatch("searchNearCoffee", payload);
+      }
+      if (state.foodsOn && payload.level < 5) {
+        dispatch("searchNearFoods", payload);
+      }
       search(
         params,
         ({ data }) => {
@@ -119,6 +148,43 @@ const house = {
     },
     resetSearchResult({ commit }) {
       commit("RESET_SEARCH_RESULT");
+    },
+    searchNearCoffee: ({ commit }, payload) => {
+      const params = {
+        indsLclsCd: "Q",
+        indsMclsCd: "Q12",
+        southWestLat: payload.swLat,
+        southWestLng: payload.swLng,
+        northEastLat: payload.neLat,
+        northEastLng: payload.neLng,
+      };
+      searchStore(
+        params,
+        ({ data }) => {
+          commit("SET_NEAR_COFFEE", data);
+        },
+        (err) => {
+          console.log(err);
+        },
+      );
+    },
+    searchNearFoods: ({ commit }, payload) => {
+      const params = {
+        indsLclsCd: "Q",
+        southWestLat: payload.swLat,
+        southWestLng: payload.swLng,
+        northEastLat: payload.neLat,
+        northEastLng: payload.neLng,
+      };
+      searchStore(
+        params,
+        ({ data }) => {
+          commit("SET_NEAR_FOODS", data);
+        },
+        (err) => {
+          console.log(err);
+        },
+      );
     },
   },
 };

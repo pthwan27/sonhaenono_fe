@@ -1,6 +1,8 @@
 <template>
   <div id="map-left_box" style="">
+    <menus-bar :mapDetail="mapDetail"></menus-bar>
     <b-button
+      class="mt-2"
       v-b-tooltip.hover.right="'내위치'"
       variant="light"
       @click="whereAmI"
@@ -10,8 +12,19 @@
 </template>
 
 <script>
+import MenusBar from "./box/MenusBar";
+
 export default {
   name: "MapLeftBox",
+  props: {
+    mapDetail: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
+  components: {
+    MenusBar,
+  },
   methods: {
     whereAmI() {
       this.$emit("whereAmI");

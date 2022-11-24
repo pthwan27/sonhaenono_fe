@@ -18,7 +18,6 @@
     <!-- 선택한 곳이 없을 경우 -->
     <div v-else>
       <search-bar></search-bar>
-      <menus-bar></menus-bar>
       <news-bar></news-bar>
       <youtube-recommand-bar></youtube-recommand-bar>
     </div>
@@ -32,7 +31,6 @@ import DetailChart from "@/components/map/detail/DetailChart";
 import DetailRoadView from "@/components/map/detail/DetailRoadView";
 import SearchBar from "@/components/map/console/SearchBar";
 import NewsBar from "./console/NewsBar";
-import MenusBar from "./console/MenusBar";
 import YoutubeRecommandBar from "./console/YoutubeRecommandBar.vue";
 
 export default {
@@ -43,7 +41,6 @@ export default {
     DetailRoadView,
     SearchBar,
     NewsBar,
-    MenusBar,
     YoutubeRecommandBar,
   },
   data() {
