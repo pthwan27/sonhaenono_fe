@@ -1,5 +1,6 @@
 export const REMEBMER_USER_ID_KEY = "remember.user.id";
 export const KAKAO_MAP_API_KEY = "1f793ce9f35193629bdf177ed4a517b9";
+export const YOUTUBE_API_KEY = "AIzaSyBZRMtFm_yXBCEWiR_4RUzrmsuIysldwgY";
 export const ROLE_ADMIN = "ROLE_ADMIN";
 export const ROLE_USER = "ROLE_USER";
 
@@ -13,6 +14,7 @@ export const BUILD_TYPE = {
 export default {
   REMEBMER_USER_ID_KEY,
   KAKAO_MAP_API_KEY,
+  YOUTUBE_API_KEY,
   ROLE_USER,
   ROLE_ADMIN,
   MAP_INITIAL_SPOT,

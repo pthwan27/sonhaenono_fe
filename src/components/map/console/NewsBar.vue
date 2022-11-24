@@ -30,7 +30,7 @@ export default {
   data() {
     return {
       currentPage: 1,
-      perPage: 3,
+      perPage: 5,
       fields: ["title"],
       items: [],
     };
@@ -66,8 +66,8 @@ export default {
 </script>
 
 <style scoped>
-.news-bar {
-  text-align: center;
+#news-bar {
+  height: 430px;
 }
 .title {
   height: 32px;
