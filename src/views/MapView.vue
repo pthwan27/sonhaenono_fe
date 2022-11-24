@@ -22,7 +22,8 @@ import { getMySpot } from "@/common/navigator";
 
 import APT_IMG from "@/assets/map/apartment.svg";
 import APT_MY_HOUSE from "@/assets/map/house.svg";
-import COFEE_IMG from "@/assets/map/coffee-cup.png";
+import COFFEE_IMG from "@/assets/map/coffee-spot.svg";
+import DISH_IMG from "@/assets/map/dish.svg";
 
 import MapSideBar from "@/components/map/MapSideBar.vue";
 import MapLeftBox from "@/components/map/MapLeftBox.vue";
@@ -38,6 +39,9 @@ export default {
       markers: [],
       positions: [],
       coffeeMarkers: [],
+      coffeePositions: [],
+      foodsMarkers: [],
+      foodsPositions: [],
       //남서쪽 북동쪽
       // 지도 위치 움직일 때 값이 저장되도록 하기 위해
       mapDetail: {
@@ -107,12 +111,33 @@ export default {
       }
     },
     near_coffee: function (newValue) {
+      this.coffeePositions = newValue.map((val) => ({
+        title: val.bizesNm,
+        pnu: val.pnu,
+        latlng: new kakao.maps.LatLng(parseFloat(val.lat), parseFloat(val.lng)),
+      }));
+    },
+    coffeePositions: function (newValue) {
       this.createCoffeeMarker(newValue);
     },
-    coffeeMarkers: function (newValue) {
-      this.showCoffeeMarker(newValue);
+    coffeeMarkers: function (newValue, oldValue) {
+      this.flushMarker(oldValue);
+      this.showCommercialMarker(newValue);
     },
-    // near_foods: function (value) {},
+    near_foods: function (newValue) {
+      this.foodsPositions = newValue.map((val) => ({
+        title: val.bizesNm,
+        pnu: val.pnu,
+        latlng: new kakao.maps.LatLng(parseFloat(val.lat), parseFloat(val.lng)),
+      }));
+    },
+    foodsPositions: function (newValue) {
+      this.createFoodsMarker(newValue);
+    },
+    foodsMarkers: function (newValue, oldValue) {
+      this.flushMarker(oldValue);
+      this.showCommercialMarker(newValue);
+    },
   },
   methods: {
     ...mapActions("house", [
@@ -203,14 +228,12 @@ export default {
     flushMarker(markers = []) {
       markers.forEach((marker) => marker.setMap(null));
     },
-    showCoffeeMarker(markers = []) {
-      console.log(markers);
-      if (this.mapDetail.level >= 5) {
-        console.log("level 5이상 : flush");
-        return this.flushMarker(markers);
+    showCommercialMarker(markers = []) {
+      if (this.mapDetail.level < 5) {
+        markers.forEach((marker) => marker.setMap(map));
+      } else {
+        this.flushMarker(markers);
       }
-      console.log("level 5 이하 : 화면 그리기");
-      markers.forEach((marker) => marker.setMap(map));
     },
     showMarker(markers = []) {
       //  if (this.mapDetail.level >= 5) {
@@ -253,9 +276,9 @@ export default {
       });
     },
     createCoffeeMarker(positions = []) {
-      let imageSrc = COFEE_IMG;
-      let imageSize = new kakao.maps.Size(40, 40);
-      let imageOption = { offset: new kakao.maps.Point(20, 40) };
+      let imageSrc = COFFEE_IMG;
+      let imageSize = new kakao.maps.Size(30, 30);
+      let imageOption = { offset: new kakao.maps.Point(15, 20) };
 
       let markerImage = new kakao.maps.MarkerImage(
         imageSrc,
@@ -264,6 +287,26 @@ export default {
       );
 
       this.coffeeMarkers = positions.map((ps) => {
+        let marker = new kakao.maps.Marker({
+          map,
+          position: ps.latlng,
+          image: markerImage,
+        });
+        return marker;
+      });
+    },
+    createFoodsMarker(positions = []) {
+      let imageSrc = DISH_IMG;
+      let imageSize = new kakao.maps.Size(30, 30);
+      let imageOption = { offset: new kakao.maps.Point(15, 20) };
+
+      let markerImage = new kakao.maps.MarkerImage(
+        imageSrc,
+        imageSize,
+        imageOption,
+      );
+
+      this.foodsMarkers = positions.map((ps) => {
         let marker = new kakao.maps.Marker({
           map,
           position: ps.latlng,
