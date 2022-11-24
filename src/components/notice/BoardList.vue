@@ -1,7 +1,7 @@
 <template>
   <div>
-    <b-container>
-      <b-card-group deck v-for="article in articles" :key="article.no">
+    <div>
+      <b-card-group deck v-for="article in paginatedArticles" :key="article.no">
         <b-card
           style="max-width: 90%"
           class="mt-3 mb-3"
@@ -14,17 +14,27 @@
             <b-card-sub-title class="mb-4 mt-1">
               <b-row>
                 <b-col class="text-left">작성자 : {{ article.memberId }}</b-col>
-                <b-col class="text-right"
-                  >작성일 : {{ article.createdAt | dataFormat }}</b-col
-                >
+                <b-col class="text-right">
+                  작성일 : {{ article.createdAt | dataFormat }}
+                </b-col>
               </b-row>
             </b-card-sub-title>
           </b-card-body>
-
           <board-item-view :comment="article.content"></board-item-view>
         </b-card>
       </b-card-group>
-    </b-container>
+    </div>
+    <b-pagination
+      class="mt-2"
+      style="justify-content: center"
+      v-model="currentPage"
+      :per-page="perPage"
+      :total-rows="this.articles.length"
+      first-number
+      last-number>
+    </b-pagination>
+
+    <!-- 추가버튼 -->
     <div
       v-if="isAdmin"
       style="display: inline-flex; position: fixed; right: 1rem; bottom: 1rem">
@@ -68,15 +78,15 @@
 import http from "@/api/http";
 import BoardItemView from "@/components/notice/item/BoardItemView.vue";
 import { mapState } from "vuex";
-
 import { mapGetters } from "vuex";
+
 export default {
   components: { BoardItemView },
   name: "BoardList",
 
   data() {
     return {
-      articles: [BoardItemView],
+      articles: [],
       active: false,
       comment: "",
       form: {
@@ -84,12 +94,23 @@ export default {
         content: "",
         errorMessage: "",
       },
+
+      currentPage: 1,
+      perPage: 3,
     };
   },
 
   computed: {
     ...mapState("auth", ["user", "isAuthenticated"]),
     ...mapGetters("auth", ["isAdmin"]),
+
+    paginatedArticles() {
+      const { currentPage, perPage } = this;
+      const start = (currentPage - 1) * perPage;
+      const end = currentPage * perPage;
+
+      return this.articles.slice(start, end);
+    },
   },
   created() {
     http.get(`/notice`).then(({ data }) => {
@@ -161,7 +182,10 @@ export default {
 .labelx .vs-input {
   margin: 10px;
 }
-
+.card-deck {
+  display: flex;
+  justify-content: center;
+}
 .dialog-modal {
   padding: 2px;
 }

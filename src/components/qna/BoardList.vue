@@ -6,17 +6,24 @@
         v-for="(article, i) in $vs.getPage(article, page, max)"
         :data="tr">
         <div>
-          <vs-card type="1" @click="viewArticle(article)">
+          <vs-card type="2">
             <template #title>
-              <h3 v-text="`${article.no}.${article.subject}`"></h3>
+              <h3
+                v-html="`${article.no}.${article.subject}`"
+                @click="viewArticle(article)"></h3>
             </template>
             <template #img>
-              <img src="@/assets/logo.png" alt="" />
+              <img
+                class="img-card"
+                :src="`${imageUrl}/${article.no + 220}/${article.no + 200}`"
+                alt
+                @click="viewArticle(article)" />
             </template>
-            <template #text
-              ><div class="div-content">{{ article.content }}</div></template
-            >
-
+            <template #text>
+              <p
+                v-html="`${article.content}`"
+                @click="viewArticle(article)"></p>
+            </template>
             <template #interactions>
               <vs-button danger icon>
                 <i class="bx bx-heart"></i>
@@ -35,7 +42,12 @@
     </div>
     <vs-pagination v-model="page" :length="$vs.getLength(article, max)" />
     <div
-      style="display: inline-flex; position: fixed; right: 1rem; bottom: 1rem">
+      style="
+        display: inline-flex;
+        position: absolute;
+        right: 1rem;
+        bottom: 1rem;
+      ">
       <template icon>
         <i
           id="addArticleBtn"
@@ -44,28 +56,26 @@
       </template>
     </div>
 
-    <vs-dialog
-      class="dialog-modal"
-      scroll
-      overflow-hidden
-      prevent-close
-      v-model="active">
+    <vs-dialog scroll overflow-hidden prevent-close auto-width v-model="active">
       <template #header>
-        <h3 class="mt-2" style="font-weight: bold">Q&A 등록하기</h3>
+        <h3>Q&A 등록하기</h3>
       </template>
-      <div class="center content-inputs mt-3">
-        <vs-input label-placeholder="제목" v-model="form.subject" />
+      <div class="con-content">
+        <div class="centerx labelx">
+          <div>
+            <label for="subject">제목 : </label>
+            <input id="subject" v-model="form.subject" />
+          </div>
+          <div>
+            <label for="content">내용 : </label>
+            <textarea id="content" v-model="form.content"></textarea>
+          </div>
+          <div>{{ form.errorMessage }}</div>
+        </div>
       </div>
-      <div class="center content-inputs mt-2">
-        <textarea
-          class="noresize textarea-modal"
-          rows="13"
-          cols="47"
-          v-model="form.content" />
-      </div>
-      <div>
-        <vs-button class="float-right mb-2" @click="saveForm"> 저장 </vs-button>
-      </div>
+      <template #footer>
+        <vs-button gradient @click="saveForm"> 저장 </vs-button>
+      </template>
     </vs-dialog>
   </div>
 </template>
@@ -73,6 +83,7 @@
 <script>
 import http from "@/api/http";
 import { mapState } from "vuex";
+
 export default {
   name: "BoardList",
 
@@ -88,6 +99,7 @@ export default {
         content: "",
         errorMessage: "",
       },
+      imageUrl: "https://picsum.photos/",
     };
   },
 
@@ -101,6 +113,8 @@ export default {
   },
   methods: {
     viewArticle(article) {
+      console.log(this.isAuthenticated);
+      console.log(this.user);
       if (this.isAuthenticated == true && this.user != null) {
         this.$router.push({
           path: `/qna`,
@@ -116,14 +130,12 @@ export default {
       this.form.errorMessage = "";
       http
         .post("/qna", {
-          subject: this.form.subject,
-          content: this.form.content,
-          type: "QNA",
+          subject: this.subject,
+          content: this.content,
         })
         .then(({ data }) => {
           if (data) {
             this.closeModal();
-            window.location.reload(true);
           }
         })
         .catch(({ response }) => {
@@ -134,7 +146,6 @@ export default {
       this.form = {
         subject: "",
         content: "",
-        type: "",
       };
       this.active = false;
     },
@@ -143,26 +154,13 @@ export default {
 </script>
 
 <style>
-a:link {
-  color: black;
+.card-img {
+  height: 300px;
 }
-a:visited {
-  color: black;
-}
-a:hover {
-  color: rgba(3, 3, 3, 0.788);
-}
-a {
-  text-decoration: none;
-}
-
 .div-card {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   margin-bottom: 15px;
-}
-.div-content {
-  word-wrap: break-word;
 }
 
 #addArticleBtn {
@@ -175,25 +173,5 @@ a {
 }
 .labelx .vs-input {
   margin: 10px;
-}
-
-.dialog-modal {
-  padding: 2px;
-}
-.vs-dialog__header {
-  height: 100%;
-}
-.vs-dialog__content {
-  min-height: 470px;
-}
-.noresize {
-  resize: none;
-}
-.textarea-modal {
-  overflow: hidden;
-  border-radius: 8px;
-  border: none;
-  background-color: #f4f7f8;
-  padding: 10px 10px 10px 10px;
 }
 </style>

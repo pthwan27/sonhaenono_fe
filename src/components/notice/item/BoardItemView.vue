@@ -1,7 +1,6 @@
 <template>
   <vs-alert :hidden-content.sync="hidden">
     <template #title> 글보기 </template>
-
     <b>{{ articleComment }}</b>
   </vs-alert>
 </template>
