@@ -1,29 +1,28 @@
 <template>
   <div>
-    <div>
-      <b-card-group deck v-for="article in paginatedArticles" :key="article.no">
-        <b-card
-          style="max-width: 90%"
-          class="mt-3 mb-3"
-          body-border-variant="none">
-          <b-card-body>
-            <b-card-title>
-              {{ article.subject }}
-            </b-card-title>
+    <b-card-group deck v-for="article in paginatedArticles" :key="article.no">
+      <b-card
+        style="max-width: 90%"
+        class="mt-2 mb-2"
+        body-border-variant="none">
+        <b-card-body>
+          <b-card-title>
+            {{ article.subject }}
+          </b-card-title>
 
-            <b-card-sub-title class="mb-4 mt-1">
-              <b-row>
-                <b-col class="text-left">작성자 : {{ article.memberId }}</b-col>
-                <b-col class="text-right">
-                  작성일 : {{ article.createdAt | dataFormat }}
-                </b-col>
-              </b-row>
-            </b-card-sub-title>
-          </b-card-body>
-          <board-item-view :comment="article.content"></board-item-view>
-        </b-card>
-      </b-card-group>
-    </div>
+          <b-card-sub-title class="mb-2 mt-1">
+            <b-row>
+              <b-col class="text-left">작성자 : {{ article.memberId }}</b-col>
+              <b-col class="text-right">
+                작성일 : {{ article.createdAt | dataFormat }}
+              </b-col>
+            </b-row>
+          </b-card-sub-title>
+        </b-card-body>
+        <board-item-view :comment="article.content"></board-item-view>
+      </b-card>
+    </b-card-group>
+
     <b-pagination
       class="mt-2"
       style="justify-content: center"
