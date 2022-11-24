@@ -33,7 +33,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #youtube-recommand-bar {
   height: 300px;
 }
