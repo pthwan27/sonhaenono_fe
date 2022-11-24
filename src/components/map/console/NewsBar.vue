@@ -59,17 +59,17 @@ export default {
   },
   methods: {
     onRowClicked(item) {
-      window.location.href = item.url;
+      window.open(item.url);
     },
   },
 };
 </script>
 
-<style scoped>
+<style>
 #news-bar {
   height: 430px;
 }
-.title {
+#news-bar .title {
   height: 32px;
   width: 100%;
 
@@ -82,7 +82,7 @@ export default {
   display: flex;
   align-content: center;
 }
-tr {
+#news-bar tr {
   cursor: pointer !important;
 }
 </style>
