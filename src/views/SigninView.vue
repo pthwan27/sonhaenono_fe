@@ -218,15 +218,6 @@ export default {
         phone: this.phone,
         email: this.email,
       };
-      if (
-        this.namehasError ||
-        this.passwordhasError ||
-        this.repasswordhasError ||
-        this.phonehasError ||
-        this.emailhasError
-      ) {
-        alert("입력하신 내용을 확인해주세요.");
-      }
       this.loading = true;
       http
         .post("/auth/signup", data)
