@@ -44,11 +44,13 @@
     <hr class="mt-5 hr-div" />
 
     <div class="mt-3">
-      <b-alert show><h8>댓글 5</h8></b-alert>
+      <b-alert show
+        ><h8>{{ `댓글  ${article.comments.length}개` }}</h8></b-alert
+      >
 
       <div v-if="article.comments">
         <div
-          class="commentBox mt-2"
+          class="commentBox mb-2"
           v-for="(comment, index) in article.comments"
           :key="comment.no">
           <div style="jusitfy-content: center; align-items: center">
@@ -90,6 +92,7 @@ export default {
     return {
       article: {},
       comment: "",
+      commentCnt: 0,
     };
   },
   computed: {
@@ -107,9 +110,7 @@ export default {
   },
 
   created() {
-    console.log(`${this.$route.params}`);
     http.get(`/qna/${this.$route.params.no}`).then(({ data }) => {
-      console.log(data);
       this.article = data;
     });
   },
@@ -160,10 +161,14 @@ export default {
   padding: 1.2rem 1.6rem 0.9rem;
   box-shadow: 0 0 11.9px 2.9px rgb(0 0 0 / 10%);
 }
+.alert {
+  padding-bottom: 1rem;
+}
 .alert-info {
-  padding: 10px;
+  margin-left: 26px;
   background: none;
   border: none;
+  height: 100%;
 }
 .hr-div {
   border-width: 2px;

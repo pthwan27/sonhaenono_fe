@@ -24,18 +24,18 @@
                 v-html="`${article.content}`"
                 @click="viewArticle(article)"></p>
             </template>
-            <template #interactions>
-              <vs-button danger icon>
+            <!-- <template #interactions> -->
+            <!-- <vs-button danger icon>
                 <i class="bx bx-heart"></i>
                 <span class="span"> 54 </span>
-              </vs-button>
+              </vs-button> -->
 
-              <!-- 댓글 개수 icon -->
-              <!-- <vs-button class="btn-chat" shadow primary>
+            <!-- 댓글 개수 icon -->
+            <!-- <vs-button class="btn-chat" shadow primary>
                 <i class="bx bx-chat"></i>
                 <span class="span"> 54 </span>
               </vs-button> -->
-            </template>
+            <!-- </template> -->
           </vs-card>
         </div>
       </vs-tr>
@@ -116,8 +116,6 @@ export default {
   },
   methods: {
     viewArticle(article) {
-      console.log(this.isAuthenticated);
-      console.log(this.user);
       if (this.isAuthenticated == true && this.user != null) {
         this.$router.push({
           path: `/qna`,
