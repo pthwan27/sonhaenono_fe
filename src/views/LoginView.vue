@@ -27,14 +27,19 @@
     <div class="box flexible">
       <b-card class="box-item">
         <div class="center content-inputs">
-          <vs-input label="아이디" v-model.lazy.trim="id" ref="id" />
+          <vs-input
+            label="아이디"
+            v-model.lazy.trim="id"
+            @keypress="checkEnter"
+            ref="id" />
         </div>
         <div class="center content-inputs">
           <vs-input
             label="비밀번호"
             v-model.lazy.trim="password"
             ref="password"
-            type="password" />
+            type="password"
+            @keypress="checkEnter" />
         </div>
         <div class="center content-inputs pt-0 pb-0">
           <vs-checkbox v-model="remember"> 아이디 기억하기 </vs-checkbox>
@@ -104,6 +109,12 @@ export default {
       };
       this.loading = true;
       this.$store.dispatch("auth/login", loginInfo);
+    },
+
+    checkEnter(e) {
+      if (e.keyCode === 13) {
+        this.login();
+      }
     },
   },
   created() {
