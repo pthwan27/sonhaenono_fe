@@ -1,9 +1,9 @@
 <template>
   <div id="menus-bar">
-    <div class="menus-item">
+    <!-- <div class="menus-item">
       <img alt="favorite" :src="iconImg.FAVORITE_IMG" />
       <span>관심지역</span>
-    </div>
+    </div> -->
     <div
       :class="`menus-item ${coffeeOn ? 'clicked' : ''}`"
       @click="toggleCoffeeOn">
@@ -54,7 +54,7 @@ export default {
 <style>
 #menus-bar {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   background-color: #fff;
   border-radius: 1rem;
   overflow: hidden;

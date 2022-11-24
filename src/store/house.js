@@ -75,7 +75,7 @@ const house = {
       state.near_coffee = coffees;
     },
     SET_NEAR_FOODS(state, foods) {
-      state.near_foods = foods;
+      state.near_foods = foods.filter((food) => food.indsMclsCd !== "Q12");
     },
   },
   actions: {
