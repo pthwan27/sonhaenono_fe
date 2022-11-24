@@ -67,7 +67,10 @@ export default {
 
 <style>
 #news-bar {
-  height: 430px;
+  height: 400px;
+}
+#news-bar th[role="columnheader"] {
+  display: none;
 }
 #news-bar .title {
   height: 32px;
