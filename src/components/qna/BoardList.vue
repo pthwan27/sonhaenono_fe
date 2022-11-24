@@ -42,6 +42,7 @@
     </div>
     <vs-pagination v-model="page" :length="$vs.getLength(article, max)" />
     <div
+      v-if="isAuthenticated"
       style="
         display: inline-flex;
         position: absolute;
