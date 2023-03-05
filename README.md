@@ -13,6 +13,10 @@
 
 [FE] Vue 2
 
+### ERD
+<img width="395" alt="손해노노-ERD" src="https://user-images.githubusercontent.com/65005680/222974659-501b46a7-a6ed-4c99-bec8-9b05d6ab9ec2.png">
+
+
 ### 화면 설계
 ![Q A](https://user-images.githubusercontent.com/65005680/222646119-d83b867c-af39-4841-ae97-2d04a2b5dd58.png)
 
