@@ -26,3 +26,15 @@
 
 ![메인(지도)화면](https://user-images.githubusercontent.com/65005680/222646150-d94b4a1e-bc95-4ace-8df9-5b6064183b03.png)
 
+![1x4](https://user-images.githubusercontent.com/65005680/222973140-690d6e4e-d13d-4697-99d4-5623822e0b60.gif)
+
+![2x4](https://user-images.githubusercontent.com/65005680/222973133-5884b6b7-c2ce-4e84-922b-9af03d9e8a4e.gif)
+
+![3x4](https://user-images.githubusercontent.com/65005680/222973374-ea74db86-304d-4efd-9df2-38001567e942.gif)
+
+![4x4](https://user-images.githubusercontent.com/65005680/222973421-b0c515aa-e82b-453d-9a32-a9d194c2e242.gif)
+
+![5x4](https://user-images.githubusercontent.com/65005680/222973523-11e96d33-460d-4ece-9d0c-311b178c9655.gif)
+
+![6x12](https://user-images.githubusercontent.com/65005680/222973630-86fdf7e9-5adb-4cb9-b6de-0deaf3b3c8ec.gif)
+
